@@ -1,94 +1,111 @@
 import React from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
-import { Button as PaperButton } from 'react-native-paper';
-import { colors, spacing, radius, typography } from '../../theme/colors';
-
-
-
-
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native-paper';
+import { colors, radius } from '../../theme/colors';
 
 interface ButtonProps {
   label: string;
   onPress: () => void;
-  mode?: 'primary' | 'secondary' | 'ghost';
+  mode?: 'contained' | 'outlined' | 'text';
   loading?: boolean;
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: any;
 }
 
 export default function Button({
   label,
   onPress,
-  mode = 'primary',
+  mode = 'contained',
   loading = false,
   disabled = false,
   style,
 }: ButtonProps) {
-  const getPaperMode = () => {
-    if (mode === 'primary') return 'contained';
-    if (mode === 'secondary') return 'outlined';
-    return 'text';
-  };
+  const isDisabled = disabled || loading;
+
+  if (mode === 'text') {
+    return (
+      <TouchableOpacity
+        style={[styles.textButton, style]}
+        onPress={onPress}
+        disabled={isDisabled}
+        activeOpacity={0.7}
+      >
+        <Text style={[styles.textLabel, isDisabled && styles.disabledText]}>
+          {loading ? 'Aguarde...' : label}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  if (mode === 'outlined') {
+    return (
+      <TouchableOpacity
+        style={[styles.outlinedButton, isDisabled && styles.disabled, style]}
+        onPress={onPress}
+        disabled={isDisabled}
+        activeOpacity={0.8}
+      >
+        <Text style={[styles.outlinedLabel, isDisabled && styles.disabledText]}>
+          {loading ? 'Aguarde...' : label}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
 
   return (
-    <PaperButton
-      mode={getPaperMode()}
+    <TouchableOpacity
+      style={[styles.button, isDisabled && styles.disabled, style]}
       onPress={onPress}
-      loading={loading}
-      disabled={disabled || loading}
-      style={[
-        styles.button,
-        mode === 'primary' && styles.primary,
-        mode === 'secondary' && styles.secondary,
-        style,
-      ]}
-      contentStyle={styles.content}
-      labelStyle={[
-        styles.label,
-        mode === 'primary' && styles.primaryLabel,
-        mode === 'secondary' && styles.secondaryLabel,
-        mode === 'ghost' && styles.ghostLabel,
-      ]}
+      disabled={isDisabled}
+      activeOpacity={0.8}
     >
-      {label}
-    </PaperButton>
+      <Text style={styles.label}>
+        {loading ? 'Aguarde...' : label}
+      </Text>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: radius.lg,
-    marginVertical: spacing.sm,
-  },
-
-  content: {
-    paddingVertical: spacing.md,
-  },
-
-  label: {
-    ...typography.label,
-  },
-
-  primary: {
     backgroundColor: colors.accent,
-    elevation: 2,
+    borderRadius: radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginVertical: 6,
   },
-
-  primaryLabel: {
+  disabled: {
+    opacity: 0.5,
+  },
+  label: {
     color: colors.textOnAccent,
+    fontSize: 16,
+    fontWeight: '600',
   },
-
-  secondary: {
+  outlinedButton: {
+    borderWidth: 1.5,
     borderColor: colors.accent,
-    borderWidth: 1,
-    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginVertical: 6,
   },
-
-  secondaryLabel: {
+  outlinedLabel: {
     color: colors.accent,
+    fontSize: 16,
+    fontWeight: '600',
   },
-
-  ghostLabel: {
+  textButton: {
+    paddingVertical: 10,
+    alignItems: 'center',
+    marginVertical: 4,
+  },
+  textLabel: {
     color: colors.accent,
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  disabledText: {
+    opacity: 0.5,
   },
 });

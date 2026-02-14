@@ -1,56 +1,73 @@
 import { StyleSheet } from 'react-native';
+import { colors, spacing, radius, typography } from '../../../theme/colors';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
   },
   scroll: {
-    padding: 20,
+    padding: spacing.xl,
   },
   title: {
-    fontWeight: 'bold',
-    marginBottom: 4,
+    ...typography.h2,
+    color: colors.text,
+    marginBottom: spacing.xs,
   },
   company: {
-    color: '#6200ee',
-    marginBottom: 16,
+    ...typography.body,
+    color: colors.accent,
+    marginBottom: spacing.lg,
   },
   section: {
-    marginBottom: 20,
+    marginBottom: spacing.xl,
   },
   sectionTitle: {
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#333',
+    ...typography.label,
+    color: colors.textSecondary,
+    textTransform: 'uppercase',
+    marginBottom: spacing.sm,
   },
   description: {
-    color: '#555',
+    ...typography.body,
+    color: colors.textSecondary,
     lineHeight: 22,
   },
   chipRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: spacing.sm,
   },
   chip: {
-    marginBottom: 4,
+    marginBottom: spacing.xs,
+    backgroundColor: colors.accentSoft,
+    borderRadius: radius.sm,
   },
   divider: {
-    marginVertical: 16,
+    marginVertical: spacing.lg,
+    backgroundColor: colors.border,
   },
   actions: {
     flexDirection: 'row',
-    padding: 16,
-    gap: 12,
+    padding: spacing.lg,
+    gap: spacing.md,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
   },
   rejectBtn: {
     flex: 1,
-    borderColor: '#f44336',
+    borderColor: colors.border,
+    borderWidth: 1,
+    borderRadius: radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
   },
   acceptBtn: {
     flex: 1,
+    backgroundColor: colors.accent,
+    borderRadius: radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
   },
 });

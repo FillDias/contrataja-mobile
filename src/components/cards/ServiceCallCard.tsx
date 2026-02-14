@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Card, Text, Chip, Button } from 'react-native-paper';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native-paper';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ServiceCall } from '../../types';
+import { colors, spacing, radius, typography } from '../../theme/colors';
 
 interface ServiceCallCardProps {
   serviceCall: ServiceCall;
@@ -11,20 +13,12 @@ interface ServiceCallCardProps {
   onPress?: () => void;
 }
 
-const statusLabels: Record<string, string> = {
-  OPEN: 'Aberto',
-  MATCHED: 'Aguardando',
-  IN_PROGRESS: 'Em andamento',
-  COMPLETED: 'Concluido',
-  CANCELLED: 'Cancelado',
-};
-
-const statusColors: Record<string, string> = {
-  OPEN: '#4caf50',
-  MATCHED: '#ff9800',
-  IN_PROGRESS: '#2196f3',
-  COMPLETED: '#9e9e9e',
-  CANCELLED: '#f44336',
+const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
+  OPEN: { label: 'Aberto', color: colors.success, bg: colors.successSoft },
+  MATCHED: { label: 'Aguardando', color: colors.warning, bg: colors.warningSoft },
+  IN_PROGRESS: { label: 'Em andamento', color: colors.accent, bg: colors.accentSoft },
+  COMPLETED: { label: 'Concluido', color: colors.textMuted, bg: colors.surfaceVariant },
+  CANCELLED: { label: 'Cancelado', color: colors.error, bg: colors.errorSoft },
 };
 
 export default function ServiceCallCard({
@@ -34,46 +28,99 @@ export default function ServiceCallCard({
   onReject,
   onPress,
 }: ServiceCallCardProps) {
+  const status = statusConfig[serviceCall.status] ?? statusConfig.OPEN;
+
   return (
-    <Card style={styles.card} onPress={onPress}>
-      <Card.Title
-        title={serviceCall.serviceType}
-        subtitle={serviceCall.address}
-      />
-      <Card.Content>
-        <Text variant="bodyMedium" numberOfLines={2}>
-          {serviceCall.description}
-        </Text>
-        <Chip
-          style={[styles.chip, { backgroundColor: statusColors[serviceCall.status] + '20' }]}
-          textStyle={{ color: statusColors[serviceCall.status] }}
-        >
-          {statusLabels[serviceCall.status]}
-        </Chip>
-      </Card.Content>
+    <TouchableOpacity style={styles.card} activeOpacity={0.7} onPress={onPress}>
+      <View style={styles.header}>
+        <Text style={styles.title}>{serviceCall.serviceType}</Text>
+        <View style={[styles.badge, { backgroundColor: status.bg }]}>
+          <Text style={[styles.badgeText, { color: status.color }]}>{status.label}</Text>
+        </View>
+      </View>
+
+      <Text style={styles.address}>{serviceCall.address}</Text>
+      <Text style={styles.description} numberOfLines={2}>
+        {serviceCall.description}
+      </Text>
+
       {isProvider && serviceCall.status === 'MATCHED' && (
-        <Card.Actions>
-          <Button onPress={onReject} textColor="#f44336">
-            Recusar
-          </Button>
-          <Button mode="contained" onPress={onAccept}>
-            Aceitar
-          </Button>
-        </Card.Actions>
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.rejectBtn} onPress={onReject} activeOpacity={0.7}>
+            <Text style={styles.rejectText}>Recusar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.acceptBtn} onPress={onAccept} activeOpacity={0.8}>
+            <Text style={styles.acceptText}>Aceitar</Text>
+          </TouchableOpacity>
+        </View>
       )}
-    </Card>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    marginVertical: 6,
-    marginHorizontal: 2,
-    backgroundColor: '#fff',
-    elevation: 2,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
-  chip: {
-    alignSelf: 'flex-start',
-    marginTop: 8,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.xs,
+  },
+  title: {
+    ...typography.h3,
+    color: colors.text,
+    flex: 1,
+  },
+  badge: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.sm,
+  },
+  badgeText: {
+    ...typography.caption,
+  },
+  address: {
+    ...typography.bodySmall,
+    color: colors.textMuted,
+    marginBottom: spacing.sm,
+  },
+  description: {
+    ...typography.body,
+    color: colors.textSecondary,
+  },
+  actions: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginTop: spacing.lg,
+  },
+  rejectBtn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  rejectText: {
+    ...typography.label,
+    color: colors.error,
+  },
+  acceptBtn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: radius.md,
+    backgroundColor: colors.accent,
+  },
+  acceptText: {
+    ...typography.label,
+    color: colors.textOnAccent,
   },
 });

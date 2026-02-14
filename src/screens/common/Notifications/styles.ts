@@ -1,39 +1,47 @@
 import { StyleSheet } from 'react-native';
+import { colors, spacing, radius, typography } from '../../../theme/colors';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
-    paddingBottom: 8,
+    padding: spacing.lg,
+    paddingBottom: spacing.sm,
   },
   list: {
-    padding: 12,
+    padding: spacing.md,
   },
   card: {
-    marginBottom: 8,
-    backgroundColor: '#fff',
+    marginBottom: spacing.sm,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   unreadCard: {
     borderLeftWidth: 3,
-    borderLeftColor: '#6200ee',
+    borderLeftColor: colors.accent,
   },
   title: {
-    fontWeight: 'bold',
+    ...typography.h3,
+    color: colors.text,
+    fontSize: 15,
   },
   message: {
-    color: '#555',
+    ...typography.body,
+    color: colors.textSecondary,
     marginTop: 2,
   },
   time: {
-    color: '#999',
-    fontSize: 11,
-    marginTop: 4,
+    ...typography.caption,
+    color: colors.textMuted,
+    marginTop: spacing.xs,
   },
   emptyContainer: {
     flex: 1,
@@ -43,6 +51,6 @@ export default StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    color: '#999',
+    color: colors.textMuted,
   },
 });

@@ -3,7 +3,9 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { ActivityIndicator, View } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useAuthStore } from '../store/authStore'
+import { colors } from '../theme/colors'
 
 // Auth
 import LoginScreen from '../screens/auth/LoginScreen'
@@ -30,6 +32,32 @@ import Notifications from '../screens/common/Notifications'
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 
+const tabScreenOptions = {
+  headerShown: false,
+  tabBarActiveTintColor: colors.accent,
+  tabBarInactiveTintColor: colors.textMuted,
+  tabBarStyle: {
+    backgroundColor: colors.surface,
+    borderTopColor: colors.border,
+    borderTopWidth: 1,
+    elevation: 0,
+    height: 60,
+    paddingBottom: 8,
+    paddingTop: 4,
+  },
+  tabBarLabelStyle: {
+    fontSize: 11,
+    fontWeight: '600' as const,
+  },
+}
+
+const stackScreenOptions = {
+  headerStyle: { backgroundColor: colors.surface },
+  headerTintColor: colors.text,
+  headerShadowVisible: false,
+  headerTitleStyle: { fontWeight: '600' as const, fontSize: 17 },
+}
+
 // ==================== AUTH ====================
 
 function AuthStack() {
@@ -46,26 +74,46 @@ function AuthStack() {
 
 function PFTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator screenOptions={tabScreenOptions}>
       <Tab.Screen
         name="HomePF"
         component={HomePF}
-        options={{ tabBarLabel: 'Vagas', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Vagas',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="briefcase-outline" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="RequestService"
         component={RequestService}
-        options={{ tabBarLabel: 'Servicos', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Servicos',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="wrench-outline" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="NotificationsPF"
         component={Notifications}
-        options={{ tabBarLabel: 'Alertas', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Alertas',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="bell-outline" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="ProfilePF"
         component={ProfilePF}
-        options={{ tabBarLabel: 'Perfil', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Perfil',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account-outline" size={size} color={color} />
+          ),
+        }}
       />
     </Tab.Navigator>
   )
@@ -75,21 +123,36 @@ function PFTabs() {
 
 function CompanyTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator screenOptions={tabScreenOptions}>
       <Tab.Screen
         name="HomeCompany"
         component={HomeCompany}
-        options={{ tabBarLabel: 'Vagas', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Vagas',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="briefcase-outline" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="CreateJobCall"
         component={CreateJobCall}
-        options={{ tabBarLabel: 'Nova vaga', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Nova vaga',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="plus-circle-outline" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="NotificationsCompany"
         component={Notifications}
-        options={{ tabBarLabel: 'Alertas', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Alertas',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="bell-outline" size={size} color={color} />
+          ),
+        }}
       />
     </Tab.Navigator>
   )
@@ -99,16 +162,26 @@ function CompanyTabs() {
 
 function ProviderTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator screenOptions={tabScreenOptions}>
       <Tab.Screen
         name="HomeProvider"
         component={HomeProvider}
-        options={{ tabBarLabel: 'Servicos', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Servicos',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="wrench-outline" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="NotificationsProvider"
         component={Notifications}
-        options={{ tabBarLabel: 'Alertas', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Alertas',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="bell-outline" size={size} color={color} />
+          ),
+        }}
       />
     </Tab.Navigator>
   )
@@ -118,16 +191,26 @@ function ProviderTabs() {
 
 function InstitutionTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator screenOptions={tabScreenOptions}>
       <Tab.Screen
         name="HomeInstitution"
         component={Notifications}
-        options={{ tabBarLabel: 'Cursos', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Cursos',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="school-outline" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="NotificationsInstitution"
         component={Notifications}
-        options={{ tabBarLabel: 'Alertas', tabBarIcon: () => null }}
+        options={{
+          tabBarLabel: 'Alertas',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="bell-outline" size={size} color={color} />
+          ),
+        }}
       />
     </Tab.Navigator>
   )
@@ -137,7 +220,7 @@ function InstitutionTabs() {
 
 function PFStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen name="PFTabs" component={PFTabs} options={{ headerShown: false }} />
       <Stack.Screen name="JobCallDetail" component={JobCallDetail} options={{ title: 'Detalhes da vaga' }} />
       <Stack.Screen name="Chat" component={Chat} options={({ route }: any) => ({ title: route.params?.otherUserName ?? 'Chat' })} />
@@ -147,7 +230,7 @@ function PFStack() {
 
 function CompanyStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen name="CompanyTabs" component={CompanyTabs} options={{ headerShown: false }} />
       <Stack.Screen name="JobCallStatus" component={JobCallDetail} options={{ title: 'Status da vaga' }} />
       <Stack.Screen name="Chat" component={Chat} options={({ route }: any) => ({ title: route.params?.otherUserName ?? 'Chat' })} />
@@ -157,7 +240,7 @@ function CompanyStack() {
 
 function ProviderStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen name="ProviderTabs" component={ProviderTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Chat" component={Chat} options={({ route }: any) => ({ title: route.params?.otherUserName ?? 'Chat' })} />
     </Stack.Navigator>
@@ -166,7 +249,7 @@ function ProviderStack() {
 
 function InstitutionStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen name="InstitutionTabs" component={InstitutionTabs} options={{ headerShown: false }} />
     </Stack.Navigator>
   )
@@ -183,8 +266,8 @@ export default function RootNavigation() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
+        <ActivityIndicator size="large" color={colors.accent} />
       </View>
     )
   }

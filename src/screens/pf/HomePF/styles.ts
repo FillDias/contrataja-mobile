@@ -1,25 +1,29 @@
 import { StyleSheet } from 'react-native';
+import { colors, spacing, typography } from '../../../theme/colors';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   header: {
-    padding: 20,
-    paddingTop: 12,
-    backgroundColor: '#6200ee',
+    padding: spacing.xl,
+    paddingTop: spacing.lg,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
   headerTitle: {
-    color: '#fff',
-    fontWeight: 'bold',
+    ...typography.h2,
+    color: colors.text,
   },
   headerSubtitle: {
-    color: '#e0d4f5',
-    marginTop: 4,
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
   },
   list: {
-    padding: 16,
+    padding: spacing.lg,
   },
   emptyContainer: {
     flex: 1,
@@ -29,7 +33,7 @@ export default StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    color: '#999',
-    marginTop: 8,
+    color: colors.textMuted,
+    marginTop: spacing.sm,
   },
 });

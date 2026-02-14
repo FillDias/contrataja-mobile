@@ -8,6 +8,7 @@ export default function useProfilePF() {
   const { profile, fetchProfile, isLoading } = useUserStore();
   const { logout } = useAuthStore();
   const [isSaving, setIsSaving] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const profilePF = profile?.profilePF;
   const hasProfile = !!profilePF;
 
@@ -36,18 +37,58 @@ export default function useProfilePF() {
     try {
       await profilesApi.addExperience(data);
       await fetchProfile();
+      setActiveSection(null);
+      Alert.alert('Sucesso', 'Experiencia adicionada!');
     } catch {
       Alert.alert('Erro', 'Nao foi possivel adicionar experiencia');
     }
   }, []);
 
   const handleRemoveExperience = useCallback(async (id: string) => {
+    Alert.alert('Remover', 'Remover esta experiencia?', [
+      { text: 'Cancelar' },
+      {
+        text: 'Remover',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await profilesApi.removeExperience(id);
+            await fetchProfile();
+          } catch {
+            Alert.alert('Erro', 'Nao foi possivel remover');
+          }
+        },
+      },
+    ]);
+  }, []);
+
+  const handleAddEducation = useCallback(async (data: any) => {
     try {
-      await profilesApi.removeExperience(id);
+      await profilesApi.addEducation(data);
       await fetchProfile();
+      setActiveSection(null);
+      Alert.alert('Sucesso', 'Formacao adicionada!');
     } catch {
-      Alert.alert('Erro', 'Nao foi possivel remover experiencia');
+      Alert.alert('Erro', 'Nao foi possivel adicionar formacao');
     }
+  }, []);
+
+  const handleRemoveEducation = useCallback(async (id: string) => {
+    Alert.alert('Remover', 'Remover esta formacao?', [
+      { text: 'Cancelar' },
+      {
+        text: 'Remover',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await profilesApi.removeEducation(id);
+            await fetchProfile();
+          } catch {
+            Alert.alert('Erro', 'Nao foi possivel remover');
+          }
+        },
+      },
+    ]);
   }, []);
 
   const handleLogout = useCallback(() => {
@@ -62,9 +103,13 @@ export default function useProfilePF() {
     hasProfile,
     isLoading,
     isSaving,
+    activeSection,
+    setActiveSection,
     handleSaveProfile,
     handleAddExperience,
     handleRemoveExperience,
+    handleAddEducation,
+    handleRemoveEducation,
     handleLogout,
   };
 }

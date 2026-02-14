@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
+import { colors, spacing, radius } from '../../../theme/colors';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   list: {
-    padding: 12,
+    padding: spacing.md,
   },
   bubbleRow: {
     flexDirection: 'row',
@@ -20,51 +21,54 @@ export default StyleSheet.create({
   },
   bubble: {
     maxWidth: '75%',
-    padding: 10,
-    borderRadius: 16,
+    padding: spacing.md,
+    borderRadius: radius.lg,
   },
   myBubble: {
-    backgroundColor: '#6200ee',
-    borderBottomRightRadius: 4,
+    backgroundColor: colors.accent,
+    borderBottomRightRadius: spacing.xs,
   },
   otherBubble: {
-    backgroundColor: '#fff',
-    borderBottomLeftRadius: 4,
-    elevation: 1,
+    backgroundColor: colors.surface,
+    borderBottomLeftRadius: spacing.xs,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   myText: {
-    color: '#fff',
+    color: colors.textOnAccent,
+    fontSize: 15,
   },
   otherText: {
-    color: '#333',
+    color: colors.text,
+    fontSize: 15,
   },
   time: {
     fontSize: 10,
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   myTime: {
-    color: '#d4bfff',
+    color: 'rgba(255,255,255,0.6)',
     textAlign: 'right',
   },
   otherTime: {
-    color: '#999',
+    color: colors.textMuted,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
-    backgroundColor: '#fff',
+    padding: spacing.sm,
+    backgroundColor: colors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: colors.border,
   },
   input: {
     flex: 1,
-    marginRight: 8,
-    backgroundColor: '#f5f5f5',
+    marginRight: spacing.sm,
+    backgroundColor: colors.surfaceVariant,
   },
   emptyText: {
     textAlign: 'center',
-    color: '#999',
+    color: colors.textMuted,
     marginTop: 40,
   },
 });

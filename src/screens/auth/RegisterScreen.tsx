@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+import { StyleSheet, ScrollView, Alert, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormInput from '../../components/forms/FormInput';
-import Button from '../../components/common/Button';
 import { useAuthStore } from '../../store/authStore';
 import { UserType } from '../../types';
+import { colors, spacing, radius, typography } from '../../theme/colors';
 
 const registerSchema = z
   .object({
@@ -51,38 +51,85 @@ export default function RegisterScreen({ route }: any) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text variant="headlineSmall" style={styles.title}>
-        Cadastro
-      </Text>
-      <Text variant="bodyMedium" style={styles.subtitle}>
-        {typeLabels[userType]}
-      </Text>
+    <ScrollView style={styles.screen} contentContainerStyle={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.brand}>ContrataJA</Text>
+        <Text style={styles.title}>Criar conta</Text>
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>{typeLabels[userType]}</Text>
+        </View>
+      </View>
 
-      <FormInput name="email" control={control} label="Email" keyboardType="email-address" />
-      <FormInput name="password" control={control} label="Senha" secureTextEntry />
-      <FormInput name="confirmPassword" control={control} label="Confirmar senha" secureTextEntry />
+      <View style={styles.form}>
+        <FormInput name="email" control={control} label="Email" keyboardType="email-address" />
+        <FormInput name="password" control={control} label="Senha" secureTextEntry />
+        <FormInput name="confirmPassword" control={control} label="Confirmar senha" secureTextEntry />
 
-      <Button label="Cadastrar" onPress={handleSubmit(onSubmit)} loading={isLoading} />
+        <TouchableOpacity
+          style={[styles.button, isLoading && styles.buttonDisabled]}
+          activeOpacity={0.8}
+          onPress={handleSubmit(onSubmit)}
+          disabled={isLoading}
+        >
+          <Text style={styles.buttonText}>
+            {isLoading ? 'Cadastrando...' : 'Cadastrar'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flexGrow: 1,
-    padding: 24,
+    padding: spacing.xxl,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: spacing.xxxl,
+  },
+  brand: {
+    ...typography.h1,
+    color: colors.primary,
+    marginBottom: spacing.sm,
   },
   title: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginBottom: 4,
+    ...typography.body,
+    color: colors.textSecondary,
+    marginBottom: spacing.md,
   },
-  subtitle: {
-    textAlign: 'center',
-    color: '#6200ee',
-    marginBottom: 24,
+  badge: {
+    backgroundColor: colors.accentSoft,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.full,
+  },
+  badgeText: {
+    ...typography.label,
+    color: colors.accent,
+  },
+  form: {
+    gap: spacing.xs,
+  },
+  button: {
+    backgroundColor: colors.accent,
+    borderRadius: radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: spacing.lg,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  buttonText: {
+    color: colors.textOnAccent,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

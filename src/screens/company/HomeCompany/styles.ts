@@ -1,38 +1,50 @@
 import { StyleSheet } from 'react-native';
+import { colors, spacing, radius, typography } from '../../../theme/colors';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   header: {
-    padding: 20,
-    paddingTop: 12,
-    backgroundColor: '#6200ee',
+    padding: spacing.xl,
+    paddingTop: spacing.lg,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
   headerTitle: {
-    color: '#fff',
-    fontWeight: 'bold',
+    ...typography.h2,
+    color: colors.text,
   },
   headerSubtitle: {
-    color: '#e0d4f5',
-    marginTop: 4,
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
   },
   list: {
-    padding: 16,
+    padding: spacing.lg,
   },
   jobCard: {
-    marginBottom: 12,
-    backgroundColor: '#fff',
+    marginBottom: spacing.md,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   statusChip: {
     alignSelf: 'flex-start',
-    marginTop: 8,
+    marginTop: spacing.sm,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   acceptedCount: {
-    color: '#4caf50',
-    fontWeight: 'bold',
-    marginTop: 4,
+    color: colors.success,
+    fontWeight: '600',
+    marginTop: spacing.xs,
+    fontSize: 13,
   },
   emptyContainer: {
     flex: 1,
@@ -42,7 +54,7 @@ export default StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    color: '#999',
-    marginTop: 8,
+    color: colors.textMuted,
+    marginTop: spacing.sm,
   },
 });

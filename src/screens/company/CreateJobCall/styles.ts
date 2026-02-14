@@ -1,30 +1,35 @@
 import { StyleSheet } from 'react-native';
+import { colors, spacing, radius, typography } from '../../../theme/colors';
 
 export default StyleSheet.create({
   scroll: {
-    padding: 20,
-    backgroundColor: '#fff',
+    padding: spacing.xl,
+    backgroundColor: colors.background,
   },
   title: {
-    fontWeight: 'bold',
-    marginBottom: 16,
+    ...typography.h2,
+    color: colors.text,
+    marginBottom: spacing.lg,
   },
   section: {
-    marginTop: 20,
+    marginTop: spacing.xl,
   },
   sectionTitle: {
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#666',
+    ...typography.label,
+    color: colors.textSecondary,
+    textTransform: 'uppercase',
+    marginBottom: spacing.sm,
   },
   hint: {
-    color: '#999',
-    fontSize: 12,
+    ...typography.caption,
+    color: colors.textMuted,
     marginTop: -4,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   submitBtn: {
-    marginTop: 24,
+    marginTop: spacing.xxl,
     marginBottom: 40,
+    backgroundColor: colors.accent,
+    borderRadius: radius.md,
   },
 });

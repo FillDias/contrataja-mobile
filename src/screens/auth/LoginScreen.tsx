@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+import { StyleSheet, ScrollView, Alert, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormInput from '../../components/forms/FormInput';
-import Button from '../../components/common/Button';
 import { useAuthStore } from '../../store/authStore';
 import { UserType } from '../../types';
+import { colors, spacing, radius, typography } from '../../theme/colors';
 
 const loginSchema = z.object({
   email: z.string().email('Email invalido'),
@@ -34,35 +34,90 @@ export default function LoginScreen({ navigation, route }: any) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text variant="headlineSmall" style={styles.title}>
-        Entrar
-      </Text>
+    <ScrollView style={styles.screen} contentContainerStyle={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.brand}>ContrataJA</Text>
+        <Text style={styles.title}>Entrar na sua conta</Text>
+      </View>
 
-      <FormInput name="email" control={control} label="Email" keyboardType="email-address" />
-      <FormInput name="password" control={control} label="Senha" secureTextEntry />
+      <View style={styles.form}>
+        <FormInput name="email" control={control} label="Email" keyboardType="email-address" />
+        <FormInput name="password" control={control} label="Senha" secureTextEntry />
 
-      <Button label="Entrar" onPress={handleSubmit(onSubmit)} loading={isLoading} />
+        <TouchableOpacity
+          style={[styles.button, isLoading && styles.buttonDisabled]}
+          activeOpacity={0.8}
+          onPress={handleSubmit(onSubmit)}
+          disabled={isLoading}
+        >
+          <Text style={styles.buttonText}>
+            {isLoading ? 'Entrando...' : 'Entrar'}
+          </Text>
+        </TouchableOpacity>
 
-      <Button
-        label="Criar conta"
-        onPress={() => navigation.navigate('Register', { userType })}
-        mode="text"
-      />
+        <TouchableOpacity
+          style={styles.linkButton}
+          onPress={() => navigation.navigate('Register', { userType })}
+        >
+          <Text style={styles.linkText}>Nao tem conta? <Text style={styles.linkBold}>Criar conta</Text></Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flexGrow: 1,
-    padding: 24,
+    padding: spacing.xxl,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+  },
+  header: {
+    marginBottom: spacing.xxxl,
+  },
+  brand: {
+    ...typography.h1,
+    color: colors.primary,
+    textAlign: 'center',
+    marginBottom: spacing.sm,
   },
   title: {
+    ...typography.body,
+    color: colors.textSecondary,
     textAlign: 'center',
-    fontWeight: 'bold',
-    marginBottom: 24,
+  },
+  form: {
+    gap: spacing.xs,
+  },
+  button: {
+    backgroundColor: colors.accent,
+    borderRadius: radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: spacing.lg,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  buttonText: {
+    color: colors.textOnAccent,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  linkButton: {
+    alignItems: 'center',
+    marginTop: spacing.xl,
+  },
+  linkText: {
+    ...typography.body,
+    color: colors.textSecondary,
+  },
+  linkBold: {
+    color: colors.accent,
+    fontWeight: '600',
   },
 });
