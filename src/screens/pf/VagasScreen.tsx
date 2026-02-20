@@ -136,7 +136,7 @@ export default function VagasScreen() {
     switch (type) {
       case 'Remoto': return { bg: colors.infoSoft, text: colors.info };
       case 'Presencial': return { bg: colors.warningSoft, text: colors.warning };
-      default: return { bg: colors.primarySoft, text: colors.primary };
+      default: return { bg: colors.accentSoft, text: colors.accent };
     }
   };
 
@@ -206,7 +206,7 @@ export default function VagasScreen() {
               >
                 <View style={s.vagaHeader}>
                   <View style={s.companyIcon}>
-                    <MaterialCommunityIcons name="domain" size={22} color={colors.primary} />
+                    <MaterialCommunityIcons name="domain" size={22} color={colors.accent} />
                   </View>
                   <View style={s.vagaInfo}>
                     <Text style={s.vagaTitle}>{vaga.title}</Text>
@@ -258,15 +258,15 @@ export default function VagasScreen() {
                 <Text style={s.modalCompany}>{selectedVaga.company}</Text>
 
                 <View style={s.modalInfoRow}>
-                  <MaterialCommunityIcons name="map-marker" size={16} color={colors.primary} />
+                  <MaterialCommunityIcons name="map-marker" size={16} color={colors.accent} />
                   <Text style={s.modalInfoText}>{selectedVaga.city}</Text>
                 </View>
                 <View style={s.modalInfoRow}>
-                  <MaterialCommunityIcons name="cash" size={16} color={colors.primary} />
+                  <MaterialCommunityIcons name="cash" size={16} color={colors.accent} />
                   <Text style={s.modalInfoText}>{selectedVaga.salary}</Text>
                 </View>
                 <View style={s.modalInfoRow}>
-                  <MaterialCommunityIcons name="clock-outline" size={16} color={colors.primary} />
+                  <MaterialCommunityIcons name="clock-outline" size={16} color={colors.accent} />
                   <Text style={s.modalInfoText}>
                     {selectedVaga.period} · {selectedVaga.type}
                   </Text>
@@ -344,8 +344,8 @@ const s = StyleSheet.create({
     borderColor: colors.border,
   },
   filterChipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    backgroundColor: colors.accent,
+    borderColor: colors.accent,
   },
   filterText: { fontSize: 13, fontWeight: '500', color: colors.textSecondary },
   filterTextActive: { color: '#FFF', fontWeight: '600' },
@@ -372,7 +372,7 @@ const s = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: radius.md,
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.accentSoft,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -398,9 +398,9 @@ const s = StyleSheet.create({
     paddingHorizontal: spacing.sm + 2,
     paddingVertical: 3,
     borderRadius: radius.full,
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.accentSoft,
   },
-  periodTagText: { fontSize: 11, fontWeight: '600', color: colors.primary },
+  periodTagText: { fontSize: 11, fontWeight: '600', color: colors.accent },
   postedText: { fontSize: 11, color: colors.textMuted, marginLeft: 'auto' },
 
   // Modal
@@ -442,7 +442,7 @@ const s = StyleSheet.create({
   },
   modalDescription: { ...typography.body, color: colors.textSecondary, lineHeight: 22 },
   bulletRow: { flexDirection: 'row', marginBottom: 6, paddingRight: spacing.lg },
-  bullet: { color: colors.primary, fontSize: 16, marginRight: spacing.sm, lineHeight: 22 },
+  bullet: { color: colors.accent, fontSize: 16, marginRight: spacing.sm, lineHeight: 22 },
   bulletText: { ...typography.body, color: colors.textSecondary, flex: 1 },
   benefitsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   benefitChip: {
@@ -453,7 +453,7 @@ const s = StyleSheet.create({
   },
   benefitText: { fontSize: 12, color: colors.success, fontWeight: '600' },
   applyBtn: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
     borderRadius: radius.md,
     paddingVertical: 14,
     alignItems: 'center',

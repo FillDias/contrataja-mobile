@@ -138,7 +138,7 @@ export default function PerfilScreen() {
 
         {/* Currículo Section */}
         <View style={s.sectionHeader}>
-          <MaterialCommunityIcons name="file-document-outline" size={20} color={colors.primary} />
+          <MaterialCommunityIcons name="file-document-outline" size={20} color={colors.accent} />
           <Text style={s.sectionHeaderTitle}>Currículo</Text>
         </View>
 
@@ -151,7 +151,7 @@ export default function PerfilScreen() {
               style={[s.itemCard, index < experiences.length - 1 && s.itemCardBorder]}
             >
               <View style={s.itemIconWrap}>
-                <MaterialCommunityIcons name="briefcase" size={18} color={colors.primary} />
+                <MaterialCommunityIcons name="briefcase" size={18} color={colors.accent} />
               </View>
               <View style={s.itemContent}>
                 <Text style={s.itemTitle}>{exp.role}</Text>
@@ -174,7 +174,7 @@ export default function PerfilScreen() {
               style={[s.itemCard, index < educations.length - 1 && s.itemCardBorder]}
             >
               <View style={s.itemIconWrap}>
-                <MaterialCommunityIcons name="school" size={18} color={colors.primary} />
+                <MaterialCommunityIcons name="school" size={18} color={colors.accent} />
               </View>
               <View style={s.itemContent}>
                 <Text style={s.itemTitle}>{edu.degree}</Text>
@@ -199,7 +199,7 @@ export default function PerfilScreen() {
 
         {/* Conta Section */}
         <View style={s.sectionHeader}>
-          <MaterialCommunityIcons name="cog-outline" size={20} color={colors.primary} />
+          <MaterialCommunityIcons name="cog-outline" size={20} color={colors.accent} />
           <Text style={s.sectionHeaderTitle}>Conta</Text>
         </View>
 
@@ -301,7 +301,7 @@ const s = StyleSheet.create({
     borderTopColor: colors.borderLight,
   },
   stat: { alignItems: 'center', flex: 1 },
-  statNumber: { fontSize: 20, fontWeight: '700', color: colors.primary },
+  statNumber: { fontSize: 20, fontWeight: '700', color: colors.accent },
   statLabel: { fontSize: 11, color: colors.textMuted, marginTop: 2 },
   statDivider: { width: 1, height: 30, backgroundColor: colors.borderLight },
 
@@ -351,7 +351,7 @@ const s = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.accentSoft,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: spacing.md,
@@ -370,12 +370,12 @@ const s = StyleSheet.create({
   // Skills
   skillsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   skillChip: {
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.accentSoft,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs + 2,
     borderRadius: radius.full,
   },
-  skillText: { fontSize: 12, color: colors.primary, fontWeight: '600' },
+  skillText: { fontSize: 12, color: colors.accent, fontWeight: '600' },
 
   // Menu
   menuSection: {

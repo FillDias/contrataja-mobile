@@ -278,7 +278,7 @@ const s = StyleSheet.create({
     marginBottom: spacing.md,
   },
   publishBtn: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
     borderRadius: radius.md,
     paddingVertical: spacing.sm + 2,
     alignItems: 'center',

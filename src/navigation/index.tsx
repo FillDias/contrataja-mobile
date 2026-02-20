@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { ActivityIndicator, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useAuthStore } from '../store/authStore'
 import { colors } from '../theme/colors'
@@ -11,12 +12,18 @@ import { colors } from '../theme/colors'
 import LoginScreen from '../screens/auth/LoginScreen'
 import RegisterScreen from '../screens/auth/RegisterScreen'
 import UserTypeScreen from '../screens/auth/UserTypeScreen'
+import VerifySMSScreen from '../screens/auth/VerifySMSScreen'
 
 // PF
 import HomePF from '../screens/pf/HomePF'
 import JobCallDetail from '../screens/pf/JobCallDetail'
 import RequestService from '../screens/pf/RequestService'
 import ProfilePF from '../screens/pf/ProfilePF'
+import FeedScreen from '../screens/pf/FeedScreen'
+import ServicosScreen from '../screens/pf/ServicosScreen'
+import VagasScreen from '../screens/pf/VagasScreen'
+import AlertasScreen from '../screens/pf/AlertasScreen'
+import PerfilScreen from '../screens/pf/PerfilScreen'
 
 // Company
 import HomeCompany from '../screens/company/HomeCompany'
@@ -32,23 +39,27 @@ import Notifications from '../screens/common/Notifications'
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 
-const tabScreenOptions = {
-  headerShown: false,
-  tabBarActiveTintColor: colors.accent,
-  tabBarInactiveTintColor: colors.textMuted,
-  tabBarStyle: {
-    backgroundColor: colors.surface,
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
-    elevation: 0,
-    height: 60,
-    paddingBottom: 8,
-    paddingTop: 4,
-  },
-  tabBarLabelStyle: {
-    fontSize: 11,
-    fontWeight: '600' as const,
-  },
+function useTabScreenOptions() {
+  const insets = useSafeAreaInsets()
+  const bottomPad = Math.max(insets.bottom, 8)
+  return {
+    headerShown: false,
+    tabBarActiveTintColor: colors.accent,
+    tabBarInactiveTintColor: colors.textMuted,
+    tabBarStyle: {
+      backgroundColor: colors.surface,
+      borderTopColor: colors.border,
+      borderTopWidth: 1,
+      elevation: 0,
+      height: 52 + bottomPad,
+      paddingBottom: bottomPad,
+      paddingTop: 4,
+    },
+    tabBarLabelStyle: {
+      fontSize: 11,
+      fontWeight: '600' as const,
+    },
+  }
 }
 
 const stackScreenOptions = {
@@ -66,6 +77,7 @@ function AuthStack() {
       <Stack.Screen name="UserType" component={UserTypeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="VerifySMS" component={VerifySMSScreen} />
     </Stack.Navigator>
   )
 }
@@ -73,11 +85,32 @@ function AuthStack() {
 // ==================== PF TABS ====================
 
 function PFTabs() {
+  const tabScreenOptions = useTabScreenOptions()
   return (
     <Tab.Navigator screenOptions={tabScreenOptions}>
       <Tab.Screen
-        name="HomePF"
-        component={HomePF}
+        name="FeedPF"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: 'Feed',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="newspaper-variant-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ServicosPF"
+        component={ServicosScreen}
+        options={{
+          tabBarLabel: 'Serviços',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="wrench-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="VagasPF"
+        component={VagasScreen}
         options={{
           tabBarLabel: 'Vagas',
           tabBarIcon: ({ color, size }) => (
@@ -86,18 +119,8 @@ function PFTabs() {
         }}
       />
       <Tab.Screen
-        name="RequestService"
-        component={RequestService}
-        options={{
-          tabBarLabel: 'Servicos',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="wrench-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="NotificationsPF"
-        component={Notifications}
+        name="AlertasPF"
+        component={AlertasScreen}
         options={{
           tabBarLabel: 'Alertas',
           tabBarIcon: ({ color, size }) => (
@@ -106,8 +129,8 @@ function PFTabs() {
         }}
       />
       <Tab.Screen
-        name="ProfilePF"
-        component={ProfilePF}
+        name="PerfilPF"
+        component={PerfilScreen}
         options={{
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color, size }) => (
@@ -122,6 +145,7 @@ function PFTabs() {
 // ==================== COMPANY TABS ====================
 
 function CompanyTabs() {
+  const tabScreenOptions = useTabScreenOptions()
   return (
     <Tab.Navigator screenOptions={tabScreenOptions}>
       <Tab.Screen
@@ -161,6 +185,7 @@ function CompanyTabs() {
 // ==================== PROVIDER TABS ====================
 
 function ProviderTabs() {
+  const tabScreenOptions = useTabScreenOptions()
   return (
     <Tab.Navigator screenOptions={tabScreenOptions}>
       <Tab.Screen
@@ -190,6 +215,7 @@ function ProviderTabs() {
 // ==================== INSTITUTION TABS ====================
 
 function InstitutionTabs() {
+  const tabScreenOptions = useTabScreenOptions()
   return (
     <Tab.Navigator screenOptions={tabScreenOptions}>
       <Tab.Screen

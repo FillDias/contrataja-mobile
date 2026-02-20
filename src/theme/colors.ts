@@ -1,27 +1,34 @@
 export const colors = {
-  primary: '#a1bc92',
-  primaryDark: '#8aa87c',
-  primaryLight: '#b5ccaa',
-  primarySoft: '#e8f0e4',
+  // Base institucional - Azul escuro
+  primary: '#0F172A',
+  primaryDark: '#020617',
+  primaryLight: '#1E293B',
+  primarySoft: '#E2E8F0',
 
-  accent: '#a1bc92',
-  accentLight: '#b5ccaa',
-  accentSoft: '#e8f0e4',
+  // Destaque - Laranja
+  accent: '#F97316',
+  accentDark: '#EA580C',
+  accentLight: '#FB923C',
+  accentSoft: '#FFF7ED',
 
-  background: '#F5F5F5',
+  // Superfícies
+  background: '#EDF1F7',
   surface: '#FFFFFF',
   surfaceVariant: '#F1F5F9',
 
-  text: '#1A1A1A',
-  textSecondary: '#6B7280',
-  textMuted: '#9CA3AF',
+  // Textos
+  text: '#0F172A',
+  textSecondary: '#64748B',
+  textMuted: '#94A3B8',
   textOnPrimary: '#FFFFFF',
   textOnAccent: '#FFFFFF',
 
-  border: '#E5E7EB',
-  borderLight: '#F3F4F6',
-  divider: '#E5E7EB',
+  // Bordas
+  border: '#E2E8F0',
+  borderLight: '#F1F5F9',
+  divider: '#E2E8F0',
 
+  // Status
   success: '#10B981',
   successSoft: '#ECFDF5',
   error: '#EF4444',
@@ -31,13 +38,15 @@ export const colors = {
   info: '#3B82F6',
   infoSoft: '#EFF6FF',
 
-  cardShadow: '#000000',
-  overlay: 'rgba(0, 0, 0, 0.5)',
+  // Sombras
+  cardShadow: '#0F172A',
+  overlay: 'rgba(15, 23, 42, 0.6)',
 
+  // Feed / Social
   linkedin: {
-    headerBg: '#a1bc92',
-    like: '#a1bc92',
-    comment: '#6B7280',
+    headerBg: '#0F172A',
+    like: '#F97316',
+    comment: '#64748B',
   },
 };
 

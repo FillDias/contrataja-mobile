@@ -131,7 +131,7 @@ export default function ServicosScreen() {
 
           {/* State selector */}
           <View style={s.locationRow}>
-            <MaterialCommunityIcons name="map-marker-outline" size={18} color={colors.primary} />
+            <MaterialCommunityIcons name="map-marker-outline" size={18} color={colors.accent} />
             <TouchableOpacity
               style={s.stateSelector}
               onPress={() => setShowStateDropdown(!showStateDropdown)}
@@ -310,13 +310,13 @@ const s = StyleSheet.create({
   stateSelector: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.accentSoft,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs + 2,
     borderRadius: radius.sm,
     gap: 4,
   },
-  stateSelectorText: { fontSize: 14, fontWeight: '600', color: colors.primary },
+  stateSelectorText: { fontSize: 14, fontWeight: '600', color: colors.accent },
   locationHint: { ...typography.bodySmall, color: colors.textMuted },
   stateDropdown: {
     marginTop: spacing.md,
@@ -331,7 +331,7 @@ const s = StyleSheet.create({
     margin: 2,
     borderRadius: radius.sm,
   },
-  stateChipActive: { backgroundColor: colors.primary },
+  stateChipActive: { backgroundColor: colors.accent },
   stateChipText: { fontSize: 12, fontWeight: '500', color: colors.textSecondary },
   stateChipTextActive: { color: '#FFF', fontWeight: '700' },
 
@@ -348,14 +348,14 @@ const s = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.accentSoft,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: spacing.xs,
   },
-  categoryIconActive: { backgroundColor: colors.primary },
+  categoryIconActive: { backgroundColor: colors.accent },
   categoryName: { ...typography.caption, color: colors.textSecondary, textAlign: 'center' },
-  categoryNameActive: { color: colors.primary, fontWeight: '700' },
+  categoryNameActive: { color: colors.accent, fontWeight: '700' },
 
   providersSection: { paddingHorizontal: spacing.md, marginTop: spacing.sm },
   emptyContainer: { alignItems: 'center', paddingVertical: 40 },
@@ -399,15 +399,15 @@ const s = StyleSheet.create({
   reviewsText: { fontSize: 12, color: colors.textMuted },
   tagRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.sm },
   tag: {
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.accentSoft,
     paddingHorizontal: spacing.sm + 2,
     paddingVertical: 3,
     borderRadius: radius.full,
   },
-  tagText: { fontSize: 11, color: colors.primary, fontWeight: '600' },
+  tagText: { fontSize: 11, color: colors.accent, fontWeight: '600' },
   contactBtn: {
     flexDirection: 'row',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
     borderRadius: radius.md,
     paddingVertical: spacing.sm + 2,
     justifyContent: 'center',

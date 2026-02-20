@@ -257,6 +257,19 @@ export type AuthStackParamList = {
   UserType: undefined;
   Login: { userType: UserType };
   Register: { userType: UserType };
+  VerifySMS: {
+    phone: string;
+    userId: string;
+    formData?: {
+      email: string;
+      password: string;
+      type: string;
+      fullName: string;
+      gender: string;
+      phone: string;
+      birthDate?: string;
+    };
+  };
 };
 
 export type PFTabParamList = {

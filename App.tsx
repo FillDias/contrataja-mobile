@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import { Provider as PaperProvider, MD3LightTheme } from 'react-native-paper'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import RootNavigation from './src/navigation'
 import { colors } from './src/theme/colors'
 
@@ -22,9 +23,11 @@ const theme = {
 
 export default function App() {
   return (
-    <PaperProvider theme={theme}>
-      <RootNavigation />
-      <StatusBar style="dark" />
-    </PaperProvider>
+    <SafeAreaProvider>
+      <PaperProvider theme={theme}>
+        <RootNavigation />
+        <StatusBar style="dark" />
+      </PaperProvider>
+    </SafeAreaProvider>
   )
 }

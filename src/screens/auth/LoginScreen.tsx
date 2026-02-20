@@ -28,8 +28,9 @@ export default function LoginScreen({ navigation, route }: any) {
   const onSubmit = async (data: LoginForm) => {
     try {
       await login(data);
-    } catch {
-      Alert.alert('Erro', 'Email ou senha incorretos');
+    } catch (error: any) {
+      const msg = error.response?.data?.message;
+      Alert.alert('Erro', Array.isArray(msg) ? msg.join('\n') : msg || 'Email ou senha incorretos');
     }
   };
 

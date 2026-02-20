@@ -101,7 +101,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
 ];
 
 const typeConfig: Record<NotifType, { icon: string; color: string; bg: string }> = {
-  proposta: { icon: 'briefcase-check', color: colors.primary, bg: colors.primarySoft },
+  proposta: { icon: 'briefcase-check', color: colors.accent, bg: colors.accentSoft },
   servico: { icon: 'wrench', color: colors.info, bg: colors.infoSoft },
   vaga: { icon: 'briefcase-search', color: colors.warning, bg: colors.warningSoft },
   sistema: { icon: 'information', color: colors.textSecondary, bg: colors.surfaceVariant },
@@ -190,7 +190,7 @@ export default function AlertasScreen() {
                     {notif.type === 'proposta' && notif.company && (
                       <View style={s.propostaHighlight}>
                         <View style={s.propostaRow}>
-                          <MaterialCommunityIcons name="domain" size={14} color={colors.primary} />
+                          <MaterialCommunityIcons name="domain" size={14} color={colors.accent} />
                           <Text style={s.propostaCompany}>{notif.company}</Text>
                         </View>
                         {notif.salary && (
@@ -275,7 +275,7 @@ const s = StyleSheet.create({
   },
   notifCardUnread: {
     borderLeftWidth: 3,
-    borderLeftColor: colors.primary,
+    borderLeftColor: colors.accent,
   },
   unreadDot: {
     position: 'absolute',
@@ -284,7 +284,7 @@ const s = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
   },
   notifIcon: {
     width: 42,
@@ -311,7 +311,7 @@ const s = StyleSheet.create({
   },
 
   propostaHighlight: {
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.accentSoft,
     borderRadius: radius.md,
     padding: spacing.md,
     marginTop: spacing.sm,
@@ -329,7 +329,7 @@ const s = StyleSheet.create({
   acceptBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
     borderRadius: radius.md,
