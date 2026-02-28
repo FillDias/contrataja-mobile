@@ -28,6 +28,8 @@ import PerfilScreen from '../screens/pf/PerfilScreen'
 // Company
 import HomeCompany from '../screens/company/HomeCompany'
 import CreateJobCall from '../screens/company/CreateJobCall'
+import FindTalent from '../screens/company/FindTalent'
+import TalentProfile from '../screens/company/TalentProfile'
 
 // Provider
 import HomeProvider from '../screens/provider/HomeProvider'
@@ -149,22 +151,22 @@ function CompanyTabs() {
   return (
     <Tab.Navigator screenOptions={tabScreenOptions}>
       <Tab.Screen
-        name="HomeCompany"
-        component={HomeCompany}
+        name="FindTalent"
+        component={FindTalent}
         options={{
-          tabBarLabel: 'Vagas',
+          tabBarLabel: 'Encontrar Talento',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="briefcase-outline" size={size} color={color} />
+            <MaterialCommunityIcons name="account-search-outline" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="CreateJobCall"
-        component={CreateJobCall}
+        name="HomeCompany"
+        component={HomeCompany}
         options={{
-          tabBarLabel: 'Nova vaga',
+          tabBarLabel: 'Publicar Vaga',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="plus-circle-outline" size={size} color={color} />
+            <MaterialCommunityIcons name="briefcase-plus-outline" size={size} color={color} />
           ),
         }}
       />
@@ -172,7 +174,7 @@ function CompanyTabs() {
         name="NotificationsCompany"
         component={Notifications}
         options={{
-          tabBarLabel: 'Alertas',
+          tabBarLabel: 'Notificações',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="bell-outline" size={size} color={color} />
           ),
@@ -258,6 +260,8 @@ function CompanyStack() {
   return (
     <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen name="CompanyTabs" component={CompanyTabs} options={{ headerShown: false }} />
+      <Stack.Screen name="CreateJobCall" component={CreateJobCall} options={{ title: 'Publicar nova vaga' }} />
+      <Stack.Screen name="TalentProfile" component={TalentProfile} options={{ title: 'Perfil do profissional' }} />
       <Stack.Screen name="JobCallStatus" component={JobCallDetail} options={{ title: 'Status da vaga' }} />
       <Stack.Screen name="Chat" component={Chat} options={({ route }: any) => ({ title: route.params?.otherUserName ?? 'Chat' })} />
     </Stack.Navigator>

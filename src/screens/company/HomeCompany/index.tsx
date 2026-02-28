@@ -61,10 +61,10 @@ export default function HomeCompany({ navigation }: any) {
       <View style={styles.header}>
         <View>
           <Text variant="titleLarge" style={styles.headerTitle}>
-            Suas vagas
+            Minhas Vagas
           </Text>
           <Text variant="bodyMedium" style={styles.headerSubtitle}>
-            {companyJobCalls.length} vaga(s) criada(s)
+            {companyJobCalls.length} vaga(s) publicada(s)
           </Text>
         </View>
 

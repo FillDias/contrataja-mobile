@@ -1,6 +1,21 @@
 import apiClient from './apiClient';
 
 export const profilesApi = {
+  // Busca de profissionais
+  async searchProfessionals(params: {
+    query?: string;
+    workMode?: string;
+    minExperience?: string;
+  }) {
+    const response = await apiClient.get('/profiles/pf/search', { params });
+    return response.data;
+  },
+
+  async getProfilePFById(id: string) {
+    const response = await apiClient.get(`/profiles/pf/${id}`);
+    return response.data;
+  },
+
   // PF
   async createProfilePF(data: any) {
     const response = await apiClient.post('/profiles/pf', data);

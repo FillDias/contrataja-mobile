@@ -11,20 +11,54 @@ export default StyleSheet.create({
     color: colors.text,
     marginBottom: spacing.lg,
   },
-  section: {
-    marginTop: spacing.xl,
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   sectionTitle: {
     ...typography.label,
     color: colors.textSecondary,
     textTransform: 'uppercase',
-    marginBottom: spacing.sm,
+    marginBottom: spacing.md,
+    letterSpacing: 0.5,
   },
   hint: {
     ...typography.caption,
     color: colors.textMuted,
     marginTop: -4,
     marginBottom: spacing.sm,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  flex1: {
+    flex: 1,
+  },
+  chipLabel: {
+    ...typography.label,
+    color: colors.textSecondary,
+    marginBottom: spacing.xs,
+    marginTop: spacing.sm,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
+  },
+  chip: {
+    borderRadius: radius.full,
+  },
+  chipActive: {
+    backgroundColor: colors.accent,
+  },
+  chipTextActive: {
+    color: colors.textOnAccent,
   },
   submitBtn: {
     marginTop: spacing.xxl,

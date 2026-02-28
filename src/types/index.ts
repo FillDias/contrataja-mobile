@@ -48,6 +48,34 @@ export enum MessageType {
   VIDEO = 'VIDEO',
 }
 
+export enum WorkDisposition {
+  REMOTO = 'REMOTO',
+  PRESENCIAL = 'PRESENCIAL',
+  AMBOS = 'AMBOS',
+}
+
+export enum JobWorkMode {
+  REMOTO = 'REMOTO',
+  PRESENCIAL = 'PRESENCIAL',
+  HIBRIDO = 'HIBRIDO',
+}
+
+export enum ContractType {
+  CLT = 'CLT',
+  PJ = 'PJ',
+  FREELANCE = 'FREELANCE',
+  ESTAGIO = 'ESTAGIO',
+  TEMPORARIO = 'TEMPORARIO',
+}
+
+export enum ExperienceLevel {
+  ESTAGIARIO = 'ESTAGIARIO',
+  JUNIOR = 'JUNIOR',
+  PLENO = 'PLENO',
+  SENIOR = 'SENIOR',
+  ESPECIALISTA = 'ESPECIALISTA',
+}
+
 // ==================== MODELS ====================
 
 export interface User {
@@ -69,6 +97,19 @@ export interface Experience {
   company: string;
   years: number;
   description?: string;
+  startDate?: string;
+  endDate?: string;
+  createdAt: string;
+}
+
+export interface Education {
+  id: string;
+  profileId: string;
+  institution: string;
+  degree: string;
+  field: string;
+  startYear?: number;
+  endYear?: number;
   createdAt: string;
 }
 
@@ -80,13 +121,17 @@ export interface ProfilePF {
   phone: string;
   birthDate: string;
   gender: Gender;
+  city?: string;
   address: string;
   lat: number;
   lng: number;
   driverLicense: boolean;
   resumeBoost: boolean;
+  qualificationsSummary?: string;
+  workDisposition?: WorkDisposition;
   skills: string[];
   experiences: Experience[];
+  educations: Education[];
   createdAt: string;
   updatedAt: string;
 }
@@ -150,6 +195,16 @@ export interface JobCall {
   description: string;
   requirements: JobRequirements;
   status: JobCallStatus;
+  category?: string;
+  salary?: string;
+  salaryMax?: string;
+  contractType?: ContractType;
+  jobWorkMode?: JobWorkMode;
+  hoursPerWeek?: number;
+  benefits: string[];
+  location?: string;
+  experienceLevel?: ExperienceLevel;
+  applicationDeadline?: string;
   company?: ProfileCompany;
   matches?: JobMatch[];
   createdAt: string;
@@ -308,4 +363,6 @@ export type RootStackParamList = {
   ServiceDetail: { serviceCallId: string };
   Chat: { roomId: string; otherUserId: string; otherUserName: string };
   JobCallStatus: { jobCallId: string };
+  TalentProfile: { profileId: string };
+  CreateJobCall: undefined;
 };
