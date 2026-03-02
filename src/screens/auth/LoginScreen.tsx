@@ -9,28 +9,34 @@ import { useAuthStore } from '../../store/authStore';
 import { UserType } from '../../types';
 import { colors, spacing, radius, typography } from '../../theme/colors';
 
-const loginSchema = z.object({
-  email: z.string().email('Email invalido'),
-  password: z.string().min(6, 'Minimo 6 caracteres'),
+const isCompany = (type: UserType) => type === 'PJ_CONTRATANTE' || type === 'PJ_PRESTADOR';
+
+const loginSchemaPF = z.object({
+  email: z.string().email('Email inválido'),
+  password: z.string().min(6, 'Mínimo 6 caracteres'),
 });
 
-type LoginForm = z.infer<typeof loginSchema>;
+const loginSchemaPJ = z.object({
+  cnpj: z.string().min(1, 'CNPJ obrigatório'),
+  password: z.string().min(6, 'Mínimo 6 caracteres'),
+});
 
 export default function LoginScreen({ navigation, route }: any) {
   const { userType } = route.params as { userType: UserType };
   const { login, isLoading } = useAuthStore();
+  const company = isCompany(userType);
 
-  const { control, handleSubmit } = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+  const { control, handleSubmit } = useForm<any>({
+    resolver: zodResolver(company ? loginSchemaPJ : loginSchemaPF),
+    defaultValues: company ? { cnpj: '', password: '' } : { email: '', password: '' },
   });
 
-  const onSubmit = async (data: LoginForm) => {
+  const onSubmit = async (data: any) => {
     try {
       await login(data);
     } catch (error: any) {
       const msg = error.response?.data?.message;
-      Alert.alert('Erro', Array.isArray(msg) ? msg.join('\n') : msg || 'Email ou senha incorretos');
+      Alert.alert('Erro', Array.isArray(msg) ? msg.join('\n') : msg || 'Credenciais inválidas');
     }
   };
 
@@ -42,7 +48,11 @@ export default function LoginScreen({ navigation, route }: any) {
       </View>
 
       <View style={styles.form}>
-        <FormInput name="email" control={control} label="Email" keyboardType="email-address" />
+        {company ? (
+          <FormInput name="cnpj" control={control} label="CNPJ" placeholder="00.000.000/0000-00" keyboardType="numeric" />
+        ) : (
+          <FormInput name="email" control={control} label="Email" keyboardType="email-address" />
+        )}
         <FormInput name="password" control={control} label="Senha" secureTextEntry />
 
         <TouchableOpacity

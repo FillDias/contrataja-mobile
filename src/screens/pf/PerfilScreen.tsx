@@ -50,7 +50,7 @@ const MOCK_EDUCATIONS = [
   },
 ];
 
-export default function PerfilScreen() {
+export default function PerfilScreen({ navigation }: any) {
   const { logout } = useAuthStore();
   const { profile } = useUserStore();
   const profilePF = profile?.profilePF;
@@ -140,6 +140,14 @@ export default function PerfilScreen() {
         <View style={s.sectionHeader}>
           <MaterialCommunityIcons name="file-document-outline" size={20} color={colors.accent} />
           <Text style={s.sectionHeaderTitle}>Currículo</Text>
+          <TouchableOpacity
+            style={s.editResumeBtn}
+            onPress={() => navigation.navigate('Resume')}
+            activeOpacity={0.8}
+          >
+            <MaterialCommunityIcons name="pencil-outline" size={15} color={colors.accent} />
+            <Text style={s.editResumeBtnText}>Editar</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Experiências */}
@@ -314,7 +322,17 @@ const s = StyleSheet.create({
     marginTop: spacing.xl,
     marginBottom: spacing.sm,
   },
-  sectionHeaderTitle: { ...typography.h3, color: colors.text },
+  sectionHeaderTitle: { ...typography.h3, color: colors.text, flex: 1 },
+  editResumeBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+    borderRadius: radius.full,
+    backgroundColor: colors.accentSoft,
+  },
+  editResumeBtnText: { fontSize: 12, fontWeight: '600', color: colors.accent },
 
   // Content sections
   section: {

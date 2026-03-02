@@ -73,6 +73,8 @@ const registerSchema = z
       .refine((v) => isAtLeast16(v), 'Você deve ter pelo menos 16 anos'),
     password: z.string().min(6, 'Mínimo 6 caracteres'),
     confirmPassword: z.string().min(6, 'Mínimo 6 caracteres'),
+    cnpj: z.string().optional(),
+    razaoSocial: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Senhas não conferem',
@@ -105,6 +107,8 @@ export default function RegisterScreen({ route, navigation }: any) {
       birthDate: '',
       password: '',
       confirmPassword: '',
+      cnpj: '',
+      razaoSocial: '',
     },
   });
 
@@ -128,6 +132,8 @@ export default function RegisterScreen({ route, navigation }: any) {
           gender: data.gender,
           phone: phoneDigits,
           birthDate: parseDate(data.birthDate)?.toISOString(),
+          cnpj: data.cnpj || undefined,
+          razaoSocial: data.razaoSocial || undefined,
         },
       });
     } catch (error: any) {
@@ -154,8 +160,16 @@ export default function RegisterScreen({ route, navigation }: any) {
       </View>
 
       <View style={s.form}>
+        {/* Campos exclusivos para empresas e prestadores */}
+        {(userType === 'PJ_CONTRATANTE' || userType === 'PJ_PRESTADOR') && (
+          <>
+            <FormInput name="razaoSocial" control={control} label="Razão Social" placeholder="Nome oficial da empresa" />
+            <FormInput name="cnpj" control={control} label="CNPJ" placeholder="00.000.000/0000-00" keyboardType="numeric" />
+          </>
+        )}
+
         {/* 1. Nome */}
-        <FormInput name="fullName" control={control} label="Nome e Sobrenome" />
+        <FormInput name="fullName" control={control} label={userType === 'PJ_CONTRATANTE' || userType === 'PJ_PRESTADOR' ? 'Nome do responsável' : 'Nome e Sobrenome'} />
 
         {/* 2. Email */}
         <FormInput name="email" control={control} label="Email" keyboardType="email-address" />

@@ -24,6 +24,7 @@ import ServicosScreen from '../screens/pf/ServicosScreen'
 import VagasScreen from '../screens/pf/VagasScreen'
 import AlertasScreen from '../screens/pf/AlertasScreen'
 import PerfilScreen from '../screens/pf/PerfilScreen'
+import ResumeScreen from '../screens/pf/ResumeScreen'
 
 // Company
 import HomeCompany from '../screens/company/HomeCompany'
@@ -251,6 +252,7 @@ function PFStack() {
     <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen name="PFTabs" component={PFTabs} options={{ headerShown: false }} />
       <Stack.Screen name="JobCallDetail" component={JobCallDetail} options={{ title: 'Detalhes da vaga' }} />
+      <Stack.Screen name="Resume" component={ResumeScreen} options={{ title: 'Meu Currículo' }} />
       <Stack.Screen name="Chat" component={Chat} options={({ route }: any) => ({ title: route.params?.otherUserName ?? 'Chat' })} />
     </Stack.Navigator>
   )

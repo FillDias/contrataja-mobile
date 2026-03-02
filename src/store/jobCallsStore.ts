@@ -3,23 +3,25 @@ import { JobCall, JobMatch } from '../types';
 import { jobCallsApi } from '../services/api/jobCallsApi';
 
 interface JobCallsState {
-  // Para empresa
   companyJobCalls: JobCall[];
-  // Para candidato PF
   candidateMatches: JobMatch[];
+  openJobCalls: JobCall[];
   isLoading: boolean;
 
   fetchCompanyJobCalls: () => Promise<void>;
   fetchCandidateMatches: () => Promise<void>;
+  fetchOpenJobCalls: () => Promise<void>;
   createJobCall: (data: any) => Promise<any>;
   acceptJobCall: (jobCallId: string) => Promise<void>;
   rejectJobCall: (jobCallId: string) => Promise<void>;
+  applyToJob: (jobCallId: string) => Promise<void>;
   addMatch: (match: JobMatch) => void;
 }
 
 export const useJobCallsStore = create<JobCallsState>((set, get) => ({
   companyJobCalls: [],
   candidateMatches: [],
+  openJobCalls: [],
   isLoading: false,
 
   fetchCompanyJobCalls: async () => {
@@ -42,6 +44,16 @@ export const useJobCallsStore = create<JobCallsState>((set, get) => ({
     }
   },
 
+  fetchOpenJobCalls: async () => {
+    set({ isLoading: true });
+    try {
+      const data = await jobCallsApi.findAllOpen();
+      set({ openJobCalls: data, isLoading: false });
+    } catch {
+      set({ isLoading: false });
+    }
+  },
+
   createJobCall: async (data) => {
     set({ isLoading: true });
     try {
@@ -57,20 +69,17 @@ export const useJobCallsStore = create<JobCallsState>((set, get) => ({
 
   acceptJobCall: async (jobCallId) => {
     await jobCallsApi.accept(jobCallId);
-    set({
-      candidateMatches: get().candidateMatches.filter(
-        (m) => m.jobCallId !== jobCallId,
-      ),
-    });
+    set({ candidateMatches: get().candidateMatches.filter((m) => m.jobCallId !== jobCallId) });
   },
 
   rejectJobCall: async (jobCallId) => {
     await jobCallsApi.reject(jobCallId);
-    set({
-      candidateMatches: get().candidateMatches.filter(
-        (m) => m.jobCallId !== jobCallId,
-      ),
-    });
+    set({ candidateMatches: get().candidateMatches.filter((m) => m.jobCallId !== jobCallId) });
+  },
+
+  applyToJob: async (jobCallId) => {
+    await jobCallsApi.apply(jobCallId);
+    set({ openJobCalls: get().openJobCalls.filter((j) => j.id !== jobCallId) });
   },
 
   addMatch: (match) => {

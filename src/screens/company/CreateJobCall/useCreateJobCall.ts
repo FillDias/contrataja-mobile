@@ -7,6 +7,18 @@ export default function useCreateJobCall(navigation: any) {
 
   const handleSubmit = useCallback(async (data: any) => {
     try {
+      // Converter DD/MM/AAAA para ISO (YYYY-MM-DD)
+      let applicationDeadline: string | undefined;
+      if (data.applicationDeadline) {
+        const cleaned = data.applicationDeadline.replace(/\D/g, '');
+        if (cleaned.length === 8) {
+          const day = cleaned.slice(0, 2);
+          const month = cleaned.slice(2, 4);
+          const year = cleaned.slice(4, 8);
+          applicationDeadline = `${year}-${month}-${day}`;
+        }
+      }
+
       const result = await createJobCall({
         title: data.title,
         description: data.description,
@@ -21,7 +33,7 @@ export default function useCreateJobCall(navigation: any) {
           : [],
         location: data.location || undefined,
         experienceLevel: data.experienceLevel || undefined,
-        applicationDeadline: data.applicationDeadline || undefined,
+        applicationDeadline,
         requirements: {
           requiredSkills: data.skills
             ? data.skills.split(',').map((s: string) => s.trim()).filter(Boolean)
@@ -39,8 +51,9 @@ export default function useCreateJobCall(navigation: any) {
         `${result.matchesCount} candidato(s) encontrado(s) pelo matching.`,
         [{ text: 'OK', onPress: () => navigation.goBack() }],
       );
-    } catch {
-      Alert.alert('Erro', 'Não foi possível publicar a vaga');
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || 'Não foi possível publicar a vaga';
+      Alert.alert('Erro', Array.isArray(msg) ? msg.join('\n') : msg);
     }
   }, []);
 

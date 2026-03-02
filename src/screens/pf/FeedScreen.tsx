@@ -1,118 +1,242 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
+  Animated,
   Image,
-  StyleSheet,
+  Linking,
+  RefreshControl,
+  ScrollView,
   StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { colors, spacing, radius, typography } from '../../theme/colors';
+import { colors, radius, spacing, typography } from '../../theme/colors';
+import { feedApi, NewsArticle } from '../../services/api/feedApi';
 
-const MOCK_POSTS = [
-  {
-    id: '1',
-    author: 'Maria Silva',
-    role: 'Desenvolvedora Full Stack',
-    city: 'São Paulo, SP',
-    avatar: null,
-    time: '2h',
-    content:
-      'Acabei de concluir minha certificação em React Native! Foram meses de dedicação, mas valeu muito a pena. Agradeço a todos que me apoiaram nessa jornada. 🚀\n\nSe alguém tiver dúvidas sobre o processo, estou à disposição!',
-    likes: 47,
-    comments: 12,
-    liked: false,
-  },
-  {
-    id: '2',
-    author: 'João Pereira',
-    role: 'Eletricista Residencial',
-    city: 'Campinas, SP',
-    avatar: null,
-    time: '5h',
-    content:
-      'Dica para quem está começando na área de elétrica: sempre invistam em boas ferramentas e EPI. A segurança vem sempre em primeiro lugar!\n\nCompartilhem com quem precisa dessa dica.',
-    likes: 89,
-    comments: 23,
-    liked: true,
-  },
-  {
-    id: '3',
-    author: 'Ana Costa',
-    role: 'Designer de Interiores',
-    city: 'Rio de Janeiro, RJ',
-    avatar: null,
-    time: '8h',
-    content:
-      'Projeto finalizado! Transformamos um apartamento de 45m² em um espaço funcional e aconchegante. O segredo? Planejamento e escolhas inteligentes de móveis multifuncionais.',
-    likes: 156,
-    comments: 34,
-    liked: false,
-  },
-  {
-    id: '4',
-    author: 'Carlos Mendes',
-    role: 'Encanador | Prestador de Serviços',
-    city: 'Belo Horizonte, MG',
-    avatar: null,
-    time: '1d',
-    content:
-      'Estamos contratando! Precisamos de 2 ajudantes com experiência em instalações hidráulicas. Região de BH. Interessados, entrem em contato pelo app.',
-    likes: 32,
-    comments: 18,
-    liked: false,
-  },
-  {
-    id: '5',
-    author: 'Fernanda Lima',
-    role: 'Professora de Inglês',
-    city: 'Curitiba, PR',
-    avatar: null,
-    time: '1d',
-    content:
-      'Oferta especial! Aulas particulares de inglês para profissionais que precisam melhorar o currículo. Primeira aula gratuita para novos alunos. Vagas limitadas!',
-    likes: 21,
-    comments: 8,
-    liked: false,
-  },
-];
+// ─── Skeleton ────────────────────────────────────────────────────────────────
+
+function SkeletonBox({ style }: { style?: object }) {
+  const opacity = useRef(new Animated.Value(0.4)).current;
+
+  useEffect(() => {
+    const anim = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, { toValue: 1, duration: 750, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0.4, duration: 750, useNativeDriver: true }),
+      ]),
+    );
+    anim.start();
+    return () => anim.stop();
+  }, [opacity]);
+
+  return <Animated.View style={[sk.box, style, { opacity }]} />;
+}
+
+function SkeletonFeatured() {
+  return (
+    <View style={[s.featuredCard, { overflow: 'hidden' }]}>
+      <SkeletonBox style={sk.featuredImg} />
+      <View style={sk.featuredBody}>
+        <SkeletonBox style={sk.line} />
+        <SkeletonBox style={[sk.line, { width: '90%', marginTop: 8 }]} />
+        <SkeletonBox style={[sk.line, { width: '70%', marginTop: 8 }]} />
+        <SkeletonBox style={[sk.line, { width: '40%', marginTop: 12, height: 10 }]} />
+      </View>
+    </View>
+  );
+}
+
+function SkeletonCompact() {
+  return (
+    <View style={[s.compactCard, { overflow: 'hidden' }]}>
+      <SkeletonBox style={sk.compactImg} />
+      <View style={sk.compactBody}>
+        <SkeletonBox style={[sk.line, { width: '50%', height: 10 }]} />
+        <SkeletonBox style={[sk.line, { marginTop: 8 }]} />
+        <SkeletonBox style={[sk.line, { width: '80%', marginTop: 6 }]} />
+      </View>
+    </View>
+  );
+}
+
+function SkeletonList() {
+  return (
+    <View style={s.newsList}>
+      <SkeletonFeatured />
+      <SkeletonCompact />
+      <SkeletonCompact />
+      <SkeletonCompact />
+    </View>
+  );
+}
+
+// ─── Cards ───────────────────────────────────────────────────────────────────
+
+interface CardProps {
+  article: NewsArticle;
+}
+
+function formatDate(iso: string) {
+  const date = new Date(iso);
+  const now = new Date();
+  const diffH = Math.floor((now.getTime() - date.getTime()) / 3_600_000);
+
+  if (diffH < 1) return 'Agora';
+  if (diffH < 24) return `${diffH}h atrás`;
+
+  return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+}
+
+/** Primeiro artigo — card grande com imagem no topo */
+function FeaturedCard({ article }: CardProps) {
+  return (
+    <TouchableOpacity
+      style={s.featuredCard}
+      onPress={() => Linking.openURL(article.url)}
+      activeOpacity={0.88}
+    >
+      {article.image ? (
+        <Image source={{ uri: article.image }} style={s.featuredImage} />
+      ) : (
+        <View style={[s.featuredImage, s.imageFallback]}>
+          <MaterialCommunityIcons name="newspaper-variant" size={48} color={colors.textMuted} />
+        </View>
+      )}
+
+      {/* Badge fonte + data sobre a imagem */}
+      <View style={s.featuredBadge}>
+        <Text style={s.featuredBadgeText} numberOfLines={1}>
+          {article.source}
+        </Text>
+        <View style={s.badgeDot} />
+        <Text style={s.featuredBadgeText}>{formatDate(article.publishedAt)}</Text>
+      </View>
+
+      <View style={s.featuredBody}>
+        <Text style={s.featuredTitle} numberOfLines={3}>
+          {article.title}
+        </Text>
+        {article.description ? (
+          <Text style={s.featuredDesc} numberOfLines={2}>
+            {article.description}
+          </Text>
+        ) : null}
+
+        <TouchableOpacity
+          style={s.readBtn}
+          onPress={() => Linking.openURL(article.url)}
+          activeOpacity={0.8}
+        >
+          <Text style={s.readBtnText}>Ler matéria</Text>
+          <MaterialCommunityIcons name="arrow-right" size={14} color={colors.accent} />
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+/** Demais artigos — card compacto horizontal */
+function CompactCard({ article }: CardProps) {
+  return (
+    <TouchableOpacity
+      style={s.compactCard}
+      onPress={() => Linking.openURL(article.url)}
+      activeOpacity={0.85}
+    >
+      {article.image ? (
+        <Image source={{ uri: article.image }} style={s.compactThumb} />
+      ) : (
+        <View style={[s.compactThumb, s.imageFallback]}>
+          <MaterialCommunityIcons name="newspaper" size={24} color={colors.textMuted} />
+        </View>
+      )}
+
+      <View style={s.compactBody}>
+        <Text style={s.compactSource}>
+          {article.source}
+          <Text style={s.compactDot}> · </Text>
+          {formatDate(article.publishedAt)}
+        </Text>
+        <Text style={s.compactTitle} numberOfLines={3}>
+          {article.title}
+        </Text>
+      </View>
+
+      <MaterialCommunityIcons
+        name="chevron-right"
+        size={18}
+        color={colors.textMuted}
+        style={s.chevron}
+      />
+    </TouchableOpacity>
+  );
+}
+
+// ─── Error state ─────────────────────────────────────────────────────────────
+
+function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <View style={s.centered}>
+      <MaterialCommunityIcons name="wifi-off" size={44} color={colors.textMuted} />
+      <Text style={s.centeredTitle}>Sem conexão</Text>
+      <Text style={s.centeredDesc}>{message}</Text>
+      <TouchableOpacity style={s.retryBtn} onPress={onRetry} activeOpacity={0.8}>
+        <MaterialCommunityIcons name="refresh" size={16} color="#FFF" />
+        <Text style={s.retryBtnText}>Tentar novamente</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+// ─── Empty state ─────────────────────────────────────────────────────────────
+
+function EmptyState({ onRetry }: { onRetry: () => void }) {
+  return (
+    <View style={s.centered}>
+      <MaterialCommunityIcons name="newspaper-remove" size={44} color={colors.textMuted} />
+      <Text style={s.centeredTitle}>Nenhuma notícia</Text>
+      <Text style={s.centeredDesc}>Não encontramos notícias para o seu perfil agora.</Text>
+      <TouchableOpacity style={s.retryBtn} onPress={onRetry} activeOpacity={0.8}>
+        <MaterialCommunityIcons name="refresh" size={16} color="#FFF" />
+        <Text style={s.retryBtnText}>Atualizar</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+// ─── Screen ──────────────────────────────────────────────────────────────────
 
 export default function FeedScreen() {
-  const [posts, setPosts] = useState(MOCK_POSTS);
-  const [newPost, setNewPost] = useState('');
-  const [showCompose, setShowCompose] = useState(false);
+  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleLike = (id: string) => {
-    setPosts(prev =>
-      prev.map(p =>
-        p.id === id
-          ? { ...p, liked: !p.liked, likes: p.liked ? p.likes - 1 : p.likes + 1 }
-          : p,
-      ),
-    );
-  };
+  const load = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
 
-  const handlePublish = () => {
-    if (!newPost.trim()) return;
-    const post = {
-      id: Date.now().toString(),
-      author: 'Você',
-      role: 'Profissional',
-      city: 'Sua cidade',
-      avatar: null,
-      time: 'agora',
-      content: newPost.trim(),
-      likes: 0,
-      comments: 0,
-      liked: false,
-    };
-    setPosts(prev => [post, ...prev]);
-    setNewPost('');
-    setShowCompose(false);
-  };
+    try {
+      const data = await feedApi.getNews();
+      setNews(data);
+      setError(null);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || err?.message || 'Erro desconhecido');
+      if (!isRefresh) setNews([]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const featured = news[0] ?? null;
+  const rest = news.slice(1);
 
   return (
     <View style={s.container}>
@@ -121,122 +245,69 @@ export default function FeedScreen() {
       {/* Header */}
       <View style={s.header}>
         <Text style={s.headerTitle}>ContrataJá</Text>
-        <TouchableOpacity onPress={() => setShowCompose(!showCompose)}>
-          <MaterialCommunityIcons
-            name={showCompose ? 'close' : 'pencil-plus-outline'}
-            size={24}
-            color="#FFF"
-          />
-        </TouchableOpacity>
+        <View style={s.headerRight}>
+          <MaterialCommunityIcons name="newspaper-variant-outline" size={22} color="#FFF" />
+        </View>
       </View>
 
-      {/* Compose */}
-      {showCompose && (
-        <View style={s.composeCard}>
-          <View style={s.composeHeader}>
-            <View style={s.avatarSmall}>
-              <MaterialCommunityIcons name="account" size={20} color={colors.textMuted} />
-            </View>
-            <Text style={s.composeName}>Nova publicação</Text>
-          </View>
-          <TextInput
-            style={s.composeInput}
-            placeholder="No que você está pensando?"
-            placeholderTextColor={colors.textMuted}
-            multiline
-            value={newPost}
-            onChangeText={setNewPost}
+      <ScrollView
+        style={s.scroll}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => load(true)}
+            colors={[colors.accent]}
+            tintColor={colors.accent}
           />
-          <TouchableOpacity
-            style={[s.publishBtn, !newPost.trim() && s.publishBtnDisabled]}
-            onPress={handlePublish}
-            disabled={!newPost.trim()}
-          >
-            <Text style={s.publishBtnText}>Publicar</Text>
-          </TouchableOpacity>
+        }
+      >
+        {/* Section header */}
+        <View style={s.sectionHeader}>
+          <Text style={s.sectionTitle}>Notícias do mercado</Text>
+          {news.length > 0 && (
+            <View style={s.badge}>
+              <Text style={s.badgeText}>{news.length}</Text>
+            </View>
+          )}
         </View>
-      )}
 
-      <ScrollView style={s.feed} showsVerticalScrollIndicator={false}>
-        {posts.map(post => (
-          <View key={post.id} style={s.postCard}>
-            {/* Author */}
-            <View style={s.postHeader}>
-              <View style={s.avatar}>
-                <MaterialCommunityIcons name="account" size={24} color={colors.textMuted} />
-              </View>
-              <View style={s.authorInfo}>
-                <Text style={s.authorName}>{post.author}</Text>
-                <Text style={s.authorRole}>{post.role}</Text>
-                <Text style={s.postMeta}>
-                  {post.city} · {post.time}
-                </Text>
-              </View>
-              <TouchableOpacity>
-                <MaterialCommunityIcons name="dots-horizontal" size={20} color={colors.textMuted} />
-              </TouchableOpacity>
-            </View>
-
-            {/* Content */}
-            <Text style={s.postContent}>{post.content}</Text>
-
-            {/* Stats */}
-            <View style={s.postStats}>
-              <Text style={s.statsText}>
-                {post.likes} curtidas · {post.comments} comentários
-              </Text>
-            </View>
-
-            {/* Actions */}
-            <View style={s.postActions}>
-              <TouchableOpacity style={s.actionBtn} onPress={() => handleLike(post.id)}>
-                <MaterialCommunityIcons
-                  name={post.liked ? 'thumb-up' : 'thumb-up-outline'}
-                  size={20}
-                  color={post.liked ? colors.linkedin.like : colors.linkedin.comment}
-                />
-                <Text style={[s.actionText, post.liked && { color: colors.linkedin.like }]}>
-                  Curtir
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={s.actionBtn}>
-                <MaterialCommunityIcons
-                  name="comment-outline"
-                  size={20}
-                  color={colors.linkedin.comment}
-                />
-                <Text style={s.actionText}>Comentar</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={s.actionBtn}>
-                <MaterialCommunityIcons
-                  name="share-outline"
-                  size={20}
-                  color={colors.linkedin.comment}
-                />
-                <Text style={s.actionText}>Compartilhar</Text>
-              </TouchableOpacity>
-            </View>
+        {/* Estados */}
+        {loading ? (
+          <SkeletonList />
+        ) : error ? (
+          <ErrorState message={error} onRetry={() => load()} />
+        ) : news.length === 0 ? (
+          <EmptyState onRetry={() => load()} />
+        ) : (
+          <View style={s.newsList}>
+            {featured && <FeaturedCard article={featured} />}
+            {rest.map((article, i) => (
+              <CompactCard key={i} article={article} />
+            ))}
           </View>
-        ))}
+        )}
 
-        <View style={{ height: 20 }} />
+        <View style={{ height: 32 }} />
       </ScrollView>
     </View>
   );
 }
 
+// ─── Styles ──────────────────────────────────────────────────────────────────
+
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
+
+  // Header
   header: {
     backgroundColor: colors.primary,
     paddingTop: 48,
     paddingBottom: 14,
     paddingHorizontal: spacing.xl,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   headerTitle: {
     fontSize: 22,
@@ -244,104 +315,216 @@ const s = StyleSheet.create({
     color: '#FFF',
     letterSpacing: -0.3,
   },
-
-  composeCard: {
-    backgroundColor: colors.surface,
-    margin: spacing.md,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    elevation: 2,
-    shadowColor: colors.cardShadow,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+  headerRight: {
+    opacity: 0.7,
   },
-  composeHeader: {
+
+  scroll: { flex: 1 },
+
+  // Section header
+  sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: spacing.md,
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.md,
   },
-  composeName: {
-    ...typography.label,
-    color: colors.text,
-    marginLeft: spacing.sm,
-  },
-  composeInput: {
-    ...typography.body,
-    color: colors.text,
-    minHeight: 80,
-    textAlignVertical: 'top',
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-  },
-  publishBtn: {
+  sectionTitle: { fontSize: 16, fontWeight: '700', color: colors.text },
+  badge: {
     backgroundColor: colors.accent,
-    borderRadius: radius.md,
-    paddingVertical: spacing.sm + 2,
+    borderRadius: radius.full,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    minWidth: 22,
     alignItems: 'center',
   },
-  publishBtnDisabled: { opacity: 0.5 },
-  publishBtnText: { color: '#FFF', fontWeight: '600', fontSize: 14 },
+  badgeText: { fontSize: 11, fontWeight: '700', color: '#FFF' },
 
-  feed: { flex: 1 },
+  // News list
+  newsList: {
+    paddingHorizontal: spacing.md,
+    gap: spacing.md,
+  },
 
-  postCard: {
+  // Featured card
+  featuredCard: {
     backgroundColor: colors.surface,
-    marginHorizontal: spacing.md,
-    marginTop: spacing.md,
-    borderRadius: radius.lg,
+    borderRadius: radius.xl,
+    overflow: 'hidden',
+    elevation: 3,
+    shadowColor: colors.cardShadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+  },
+  featuredImage: {
+    width: '100%',
+    height: 190,
+  },
+  imageFallback: {
+    backgroundColor: colors.primarySoft,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  featuredBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+  },
+  featuredBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: colors.textMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
+  },
+  badgeDot: {
+    width: 3,
+    height: 3,
+    borderRadius: 2,
+    backgroundColor: colors.textMuted,
+  },
+  featuredBody: {
     padding: spacing.lg,
+    paddingTop: spacing.sm,
+  },
+  featuredTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: colors.text,
+    lineHeight: 24,
+  },
+  featuredDesc: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+    marginTop: spacing.sm,
+    lineHeight: 19,
+  },
+  readBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: spacing.md,
+    alignSelf: 'flex-start',
+  },
+  readBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.accent,
+  },
+
+  // Compact card
+  compactCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    overflow: 'hidden',
     elevation: 1,
     shadowColor: colors.cardShadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,
-    shadowRadius: 2,
+    shadowRadius: 3,
   },
-  postHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+  compactThumb: {
+    width: 90,
+    height: 90,
   },
-  avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.primarySoft,
-    justifyContent: 'center',
-    alignItems: 'center',
+  compactBody: {
+    flex: 1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
-  avatarSmall: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.primarySoft,
-    justifyContent: 'center',
-    alignItems: 'center',
+  compactSource: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: colors.textMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
+    marginBottom: 4,
   },
-  authorInfo: { flex: 1, marginLeft: spacing.md },
-  authorName: { fontSize: 15, fontWeight: '600', color: colors.text },
-  authorRole: { fontSize: 13, color: colors.textSecondary, marginTop: 1 },
-  postMeta: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
-  postContent: {
-    ...typography.body,
+  compactDot: {
+    color: colors.accent,
+  },
+  compactTitle: {
+    fontSize: 13,
+    fontWeight: '600',
     color: colors.text,
-    marginTop: spacing.md,
-    lineHeight: 22,
+    lineHeight: 18,
   },
-  postStats: {
-    marginTop: spacing.md,
-    paddingBottom: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
+  chevron: {
+    marginRight: spacing.sm,
   },
-  statsText: { fontSize: 12, color: colors.textMuted },
-  postActions: {
+
+  // Centered states
+  centered: {
+    alignItems: 'center',
+    paddingVertical: spacing.xxxl * 2,
+    paddingHorizontal: spacing.xl,
+    gap: spacing.md,
+  },
+  centeredTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: colors.text,
+    marginTop: spacing.sm,
+  },
+  centeredDesc: {
+    ...typography.bodySmall,
+    color: colors.textMuted,
+    textAlign: 'center',
+    lineHeight: 19,
+  },
+  retryBtn: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingTop: spacing.sm,
+    alignItems: 'center',
+    gap: spacing.sm,
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+    borderRadius: radius.full,
+    marginTop: spacing.sm,
   },
-  actionBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 4 },
-  actionText: { fontSize: 13, color: colors.linkedin.comment, fontWeight: '500' },
+  retryBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFF',
+  },
+});
+
+// ─── Skeleton styles ──────────────────────────────────────────────────────────
+
+const sk = StyleSheet.create({
+  box: {
+    backgroundColor: colors.primarySoft,
+    borderRadius: radius.sm,
+  },
+  featuredImg: {
+    width: '100%',
+    height: 190,
+    borderRadius: 0,
+  },
+  featuredBody: {
+    padding: spacing.lg,
+    gap: spacing.sm,
+  },
+  line: {
+    height: 14,
+    width: '100%',
+    borderRadius: radius.sm,
+  },
+  compactImg: {
+    width: 90,
+    height: 90,
+    borderRadius: 0,
+  },
+  compactBody: {
+    flex: 1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    gap: spacing.sm,
+  },
 });

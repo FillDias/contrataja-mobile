@@ -1,7 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 import { storageService } from '../storage/storageService';
 
-const SOCKET_URL = 'http://192.168.137.1:3000';
+const SOCKET_URL = 'http://192.168.1.9:3000';
 
 class SocketService {
   private chatSocket: Socket | null = null;

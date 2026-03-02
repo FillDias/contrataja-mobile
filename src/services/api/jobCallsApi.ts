@@ -31,4 +31,14 @@ export const jobCallsApi = {
     const response = await apiClient.post(`/job-calls/${jobCallId}/reject`);
     return response.data;
   },
+
+  async findAllOpen(): Promise<JobCall[]> {
+    const response = await apiClient.get('/job-calls/open/all');
+    return response.data;
+  },
+
+  async apply(jobCallId: string): Promise<JobMatch> {
+    const response = await apiClient.post(`/job-calls/${jobCallId}/apply`);
+    return response.data;
+  },
 };
