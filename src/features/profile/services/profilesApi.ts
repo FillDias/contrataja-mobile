@@ -43,6 +43,10 @@ export const profilesApi = {
   },
 
   // Company
+  async getMyProfileCompany() {
+    const response = await apiClient.get('/profiles/company/me');
+    return response.data;
+  },
   async createProfileCompany(data: any) {
     const response = await apiClient.post('/profiles/company', data);
     return response.data;

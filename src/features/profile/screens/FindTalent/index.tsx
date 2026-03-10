@@ -4,7 +4,9 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  StatusBar,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, Chip, IconButton, ActivityIndicator } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
 import { useAuthStore } from '../../../auth/store/authStore';
@@ -103,6 +105,7 @@ function TalentCard({
 }
 
 export default function FindTalent({ navigation }: any) {
+  const insets = useSafeAreaInsets();
   const logout = useAuthStore((s) => s.logout);
 
   const {
@@ -128,9 +131,10 @@ export default function FindTalent({ navigation }: any) {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* HEADER */}
-      <View style={styles.header}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+        <View style={styles.headerRow}>
           <View>
             <Text style={styles.headerTitle}>Encontrar Talento</Text>
             <Text style={styles.headerSubtitle}>Busque profissionais por habilidade ou cargo</Text>

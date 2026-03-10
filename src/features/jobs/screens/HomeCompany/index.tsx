@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, FlatList, RefreshControl, Alert } from 'react-native';
+import { View, FlatList, RefreshControl, Alert, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, Card, Chip, FAB, IconButton } from 'react-native-paper';
 import { useAuthStore } from '../../../auth/store/authStore';
 import Loading from '../../../../components/common/Loading';
@@ -21,6 +22,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function HomeCompany({ navigation }: any) {
+  const insets = useSafeAreaInsets();
   const { companyJobCalls, isLoading, handleRefresh } = useHomeCompany();
   const logout = useAuthStore((state) => state.logout);
 
@@ -37,16 +39,17 @@ export default function HomeCompany({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View>
-          <Text variant="titleLarge" style={styles.headerTitle}>
-            Minhas Vagas
-          </Text>
-          <Text variant="bodyMedium" style={styles.headerSubtitle}>
-            {companyJobCalls.length} vaga(s) publicada(s)
-          </Text>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+        <View style={styles.headerRow}>
+          <View>
+            <Text style={styles.headerTitle}>Minhas Vagas</Text>
+            <Text style={styles.headerSubtitle}>
+              {companyJobCalls.length} vaga(s) publicada(s)
+            </Text>
+          </View>
+          <IconButton icon="logout" size={22} onPress={handleLogout} />
         </View>
-        <IconButton icon="logout" size={22} onPress={handleLogout} />
       </View>
 
       <FlatList

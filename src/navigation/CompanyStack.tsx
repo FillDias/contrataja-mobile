@@ -10,6 +10,7 @@ import CreateJobCall from '../features/jobs/screens/CreateJobCall';
 import TalentProfile from '../features/profile/screens/TalentProfile';
 import JobCallDetail from '../features/jobs/screens/JobCallDetail';
 import Notifications from '../features/notifications/components/Notifications';
+import PerfilCompany from '../features/profile/screens/PerfilCompany';
 import Chat from '../features/chat/screens/Chat';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -27,6 +28,7 @@ function CompanyTabs() {
       <Tab.Screen name="FindTalent" component={FindTalent} options={{ tabBarLabel: 'Encontrar Talento', tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="account-search-outline" size={size} color={color} /> }} />
       <Tab.Screen name="HomeCompany" component={HomeCompany} options={{ tabBarLabel: 'Publicar Vaga', tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="briefcase-plus-outline" size={size} color={color} /> }} />
       <Tab.Screen name="NotificationsCompany" component={Notifications} options={{ tabBarLabel: 'Notificacoes', tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="bell-outline" size={size} color={color} /> }} />
+      <Tab.Screen name="ProfileCompany" component={PerfilCompany} options={{ tabBarLabel: 'Perfil', tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="domain" size={size} color={color} /> }} />
     </Tab.Navigator>
   );
 }
