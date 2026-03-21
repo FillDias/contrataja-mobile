@@ -15,7 +15,8 @@ export enum Gender {
 
 export enum JobCallStatus {
   OPEN = 'OPEN',
-  MATCHING = 'MATCHING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  HIRED = 'HIRED',
   CLOSED = 'CLOSED',
   CANCELLED = 'CANCELLED',
 }

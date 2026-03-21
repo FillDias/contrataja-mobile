@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { JobCall, JobMatch } from '../../../types';
+import { JobCall, JobMatch } from '../../../types/index';
 import { jobCallsApi } from '../services/jobCallsApi';
 
 interface JobCallsState {
@@ -7,6 +7,7 @@ interface JobCallsState {
   candidateMatches: JobMatch[];
   openJobCalls: JobCall[];
   isLoading: boolean;
+  loadingIds: Set<string>;
 
   fetchCompanyJobCalls: () => Promise<void>;
   fetchCandidateMatches: () => Promise<void>;
@@ -16,6 +17,8 @@ interface JobCallsState {
   rejectJobCall: (jobCallId: string) => Promise<void>;
   applyToJob: (jobCallId: string) => Promise<void>;
   addMatch: (match: JobMatch) => void;
+  updateStatus: (jobCallId: string, status: string) => Promise<void>;
+  deleteJobCall: (jobCallId: string) => Promise<void>;
 }
 
 export const useJobCallsStore = create<JobCallsState>((set, get) => ({
@@ -23,6 +26,7 @@ export const useJobCallsStore = create<JobCallsState>((set, get) => ({
   candidateMatches: [],
   openJobCalls: [],
   isLoading: false,
+  loadingIds: new Set(),
 
   fetchCompanyJobCalls: async () => {
     set({ isLoading: true });
@@ -84,5 +88,39 @@ export const useJobCallsStore = create<JobCallsState>((set, get) => ({
 
   addMatch: (match) => {
     set({ candidateMatches: [match, ...get().candidateMatches] });
+  },
+
+  updateStatus: async (jobCallId, status) => {
+    const ids = new Set(get().loadingIds);
+    ids.add(jobCallId);
+    set({ loadingIds: ids });
+    try {
+      const updated = await jobCallsApi.updateJobCallStatus(jobCallId, status);
+      set({
+        companyJobCalls: get().companyJobCalls.map((j) =>
+          j.id === jobCallId ? { ...j, status: updated.status } : j,
+        ),
+      });
+    } finally {
+      const next = new Set(get().loadingIds);
+      next.delete(jobCallId);
+      set({ loadingIds: next });
+    }
+  },
+
+  deleteJobCall: async (jobCallId) => {
+    const ids = new Set(get().loadingIds);
+    ids.add(jobCallId);
+    set({ loadingIds: ids });
+    try {
+      await jobCallsApi.deleteJobCall(jobCallId);
+      set({
+        companyJobCalls: get().companyJobCalls.filter((j) => j.id !== jobCallId),
+      });
+    } finally {
+      const next = new Set(get().loadingIds);
+      next.delete(jobCallId);
+      set({ loadingIds: next });
+    }
   },
 }));

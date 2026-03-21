@@ -5,7 +5,14 @@ import { socketService } from '../../../../services/socket/socketService';
 
 export default function useHomeCompany() {
   const { user } = useAuthStore();
-  const { companyJobCalls, isLoading, fetchCompanyJobCalls } = useJobCallsStore();
+  const {
+    companyJobCalls,
+    isLoading,
+    loadingIds,
+    fetchCompanyJobCalls,
+    updateStatus,
+    deleteJobCall,
+  } = useJobCallsStore();
 
   useEffect(() => {
     fetchCompanyJobCalls();
@@ -26,5 +33,5 @@ export default function useHomeCompany() {
     fetchCompanyJobCalls();
   }, []);
 
-  return { companyJobCalls, isLoading, handleRefresh };
+  return { companyJobCalls, isLoading, loadingIds, handleRefresh, updateStatus, deleteJobCall };
 }
