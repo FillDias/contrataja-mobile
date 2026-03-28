@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
+import { Text, TextInput, Switch } from 'react-native-paper';
+import { AREAS_ATUACAO } from '../../../jobs/types/areas';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -51,6 +52,8 @@ export default function ProfilePF() {
   const [workDisposition, setWorkDisposition] = useState(
     profile?.workDisposition ?? 'PRESENCIAL'
   );
+  const [disponivel, setDisponivel] = useState(profile?.disponivel ?? false);
+  const [areaAtuacao, setAreaAtuacao] = useState(profile?.areaAtuacao ?? '');
 
   // Experience form state
   const [expTitle, setExpTitle] = useState('');
@@ -105,6 +108,8 @@ export default function ProfilePF() {
       workDisposition,
       skills: skillsArray,
       gender: 'OUTRO',
+      disponivel,
+      areaAtuacao: areaAtuacao || undefined,
     });
   };
 
@@ -188,6 +193,53 @@ export default function ProfilePF() {
               </Text>
             </TouchableOpacity>
           ))}
+        </View>
+      </View>
+
+      {/* ========== DISPONIBILIDADE ========== */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionLabel}>Disponibilidade</Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Text style={{ color: colors.text, fontSize: 15 }}>Disponivel para contratacao</Text>
+          <Switch
+            value={disponivel}
+            onValueChange={setDisponivel}
+            color={colors.accent}
+          />
+        </View>
+      </View>
+
+      {/* ========== AREA DE ATUACAO ========== */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionLabel}>Area de Atuacao</Text>
+        </View>
+        <View style={styles.dispositionRow}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={{ flexDirection: 'row', gap: 8 }}>
+              {AREAS_ATUACAO.map((area) => (
+                <TouchableOpacity
+                  key={area}
+                  style={[
+                    styles.dispositionChip,
+                    areaAtuacao === area && styles.dispositionChipActive,
+                  ]}
+                  onPress={() => setAreaAtuacao(areaAtuacao === area ? '' : area)}
+                >
+                  <Text
+                    style={[
+                      styles.dispositionText,
+                      areaAtuacao === area && styles.dispositionTextActive,
+                    ]}
+                  >
+                    {area}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
         </View>
       </View>
 

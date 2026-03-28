@@ -83,6 +83,7 @@ export interface User {
   id: string;
   email: string;
   type: UserType;
+  disponivel: boolean;
   createdAt: string;
   updatedAt: string;
   profilePF?: ProfilePF;
@@ -131,6 +132,8 @@ export interface ProfilePF {
   qualificationsSummary?: string;
   workDisposition?: WorkDisposition;
   skills: string[];
+  disponivel: boolean;
+  areaAtuacao?: string;
   experiences: Experience[];
   educations: Education[];
   createdAt: string;
@@ -177,6 +180,16 @@ export interface ProfileInstitution {
   address: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TalentResult {
+  userId: string;
+  fullName: string;
+  skills: string[];
+  summary?: string;
+  experiences: Pick<Experience, 'id' | 'title' | 'company' | 'years' | 'description'>[];
+  educations: Pick<Education, 'id' | 'institution' | 'degree' | 'field' | 'startYear' | 'endYear'>[];
+  certificates?: { id: string; name: string; issuer: string }[];
 }
 
 export interface JobRequirements {
@@ -364,6 +377,6 @@ export type RootStackParamList = {
   ServiceDetail: { serviceCallId: string };
   Chat: { roomId: string; otherUserId: string; otherUserName: string };
   JobCallStatus: { jobCallId: string };
-  TalentProfile: { profileId: string };
+  TalentProfile: { userId: string };
   CreateJobCall: undefined;
 };

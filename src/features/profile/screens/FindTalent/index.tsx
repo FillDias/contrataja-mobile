@@ -5,13 +5,15 @@ import {
   TouchableOpacity,
   Alert,
   StatusBar,
+  ScrollView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, Chip, IconButton, ActivityIndicator } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
 import { useAuthStore } from '../../../auth/store/authStore';
-import { ProfilePF } from '../../../../types';
+import { TalentResult } from '../../../../types';
 import useFindTalent, { WorkModeFilter, ExperienceFilter } from './useFindTalent';
+import { AREAS_ATUACAO } from '../../../jobs/types/areas';
 import styles from './styles';
 
 const WORK_MODE_OPTIONS: { label: string; value: WorkModeFilter }[] = [
@@ -30,23 +32,23 @@ const EXPERIENCE_OPTIONS: { label: string; value: ExperienceFilter }[] = [
 ];
 
 function TalentCard({
-  profile,
+  talent,
   totalExp,
   onPress,
 }: {
-  profile: ProfilePF;
+  talent: TalentResult;
   totalExp: number;
   onPress: () => void;
 }) {
-  const initials = profile.fullName
+  const initials = talent.fullName
     .split(' ')
     .slice(0, 2)
     .map((n) => n[0])
     .join('')
     .toUpperCase();
 
-  const topSkills = profile.skills.slice(0, 3);
-  const mainRole = profile.experiences?.[0]?.title ?? 'Profissional';
+  const topSkills = talent.skills.slice(0, 3);
+  const mainRole = talent.experiences?.[0]?.title ?? 'Profissional';
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
@@ -55,7 +57,7 @@ function TalentCard({
           <Text style={styles.avatarText}>{initials}</Text>
         </View>
         <View style={styles.cardInfo}>
-          <Text style={styles.cardName}>{profile.fullName}</Text>
+          <Text style={styles.cardName}>{talent.fullName}</Text>
           <Text style={styles.cardTitle}>{mainRole}</Text>
         </View>
       </View>
@@ -72,18 +74,6 @@ function TalentCard({
             </Text>
           </View>
         )}
-        {profile.workDisposition && (
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>
-              {profile.workDisposition === 'AMBOS' ? 'Híbrido' : profile.workDisposition === 'REMOTO' ? 'Remoto' : 'Presencial'}
-            </Text>
-          </View>
-        )}
-        {profile.resumeBoost && (
-          <View style={[styles.badge, { backgroundColor: '#FFF7ED' }]}>
-            <Text style={[styles.badgeText, { color: '#F97316' }]}>Destaque</Text>
-          </View>
-        )}
       </View>
 
       {topSkills.length > 0 && (
@@ -93,9 +83,9 @@ function TalentCard({
               <Text style={styles.skillText}>{skill}</Text>
             </View>
           ))}
-          {profile.skills.length > 3 && (
+          {talent.skills.length > 3 && (
             <View style={styles.skillChip}>
-              <Text style={styles.skillText}>+{profile.skills.length - 3}</Text>
+              <Text style={styles.skillText}>+{talent.skills.length - 3}</Text>
             </View>
           )}
         </View>
@@ -118,6 +108,8 @@ export default function FindTalent({ navigation }: any) {
     setWorkMode,
     minExperience,
     setMinExperience,
+    areaFilter,
+    setAreaFilter,
     search,
     totalExperience,
   } = useFindTalent();
@@ -137,7 +129,7 @@ export default function FindTalent({ navigation }: any) {
         <View style={styles.headerRow}>
           <View>
             <Text style={styles.headerTitle}>Encontrar Talento</Text>
-            <Text style={styles.headerSubtitle}>Busque profissionais por habilidade ou cargo</Text>
+            <Text style={styles.headerSubtitle}>Talentos disponiveis para suas vagas abertas</Text>
           </View>
           <IconButton icon="logout" size={22} onPress={handleLogout} />
         </View>
@@ -203,6 +195,33 @@ export default function FindTalent({ navigation }: any) {
             </Chip>
           ))}
         </View>
+
+        <Text style={styles.filterLabel}>Area de Atuacao</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={[styles.chipRow, { flexWrap: 'nowrap' }]}>
+            <Chip
+              selected={areaFilter === ''}
+              onPress={() => setAreaFilter('')}
+              style={[styles.chip, areaFilter === '' && styles.chipActive]}
+              textStyle={areaFilter === '' ? styles.chipTextActive : undefined}
+              compact
+            >
+              Todas
+            </Chip>
+            {AREAS_ATUACAO.map((area) => (
+              <Chip
+                key={area}
+                selected={areaFilter === area}
+                onPress={() => setAreaFilter(areaFilter === area ? '' : area)}
+                style={[styles.chip, areaFilter === area && styles.chipActive]}
+                textStyle={areaFilter === area ? styles.chipTextActive : undefined}
+                compact
+              >
+                {area}
+              </Chip>
+            ))}
+          </View>
+        </ScrollView>
       </View>
 
       {/* RESULTADO */}
@@ -226,10 +245,10 @@ export default function FindTalent({ navigation }: any) {
             }
             renderItem={({ item }) => (
               <TalentCard
-                profile={item}
+                talent={item}
                 totalExp={totalExperience(item)}
                 onPress={() =>
-                  navigation.navigate('TalentProfile', { profileId: item.id })
+                  navigation.navigate('TalentProfile', { userId: item.userId })
                 }
               />
             )}
@@ -238,7 +257,7 @@ export default function FindTalent({ navigation }: any) {
                 <Text variant="titleMedium" style={styles.emptyText}>
                   {hasSearched
                     ? 'Nenhum profissional encontrado'
-                    : 'Use a busca acima para encontrar talentos'}
+                    : 'Nenhum talento disponivel para suas vagas abertas'}
                 </Text>
                 {hasSearched && (
                   <Text variant="bodySmall" style={styles.emptyText}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,13 @@ import {
   StatusBar,
   Alert,
 } from 'react-native';
+import { Switch } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors, spacing, radius, typography } from '../../../theme/colors';
 import { useAuthStore } from '../../auth/store/authStore';
 import { useUserStore } from '../store/userStore';
+import { authApi } from '../../auth/services/authApi';
+import { useEffect } from 'react';
 
 const MOCK_SKILLS = [
   'React Native', 'TypeScript', 'Node.js', 'Python',
@@ -52,12 +55,32 @@ const MOCK_EDUCATIONS = [
 
 export default function PerfilScreen({ navigation }: any) {
   const { logout } = useAuthStore();
-  const { profile } = useUserStore();
+  const { profile, fetchProfile } = useUserStore();
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
   const profilePF = profile?.profilePF;
 
   const displayName = profilePF?.fullName || profile?.name || 'Usuário ContrataJá';
   const displayRole = profilePF?.headline || 'Profissional';
   const displayCity = profilePF?.city || 'São Paulo, SP';
+
+  const [disponivel, setDisponivel] = useState(profile?.disponivel ?? false);
+
+  useEffect(() => {
+    setDisponivel(profile?.disponivel ?? false);
+  }, [profile?.disponivel]);
+
+  const handleToggleDisponivel = useCallback(async (value: boolean) => {
+    setDisponivel(value);
+    try {
+      await authApi.setDisponivel(value);
+    } catch {
+      setDisponivel(!value);
+      Alert.alert('Erro', 'Nao foi possivel atualizar disponibilidade');
+    }
+  }, []);
 
   const experiences = profilePF?.experiences?.length
     ? profilePF.experiences.map((e: any) => ({
@@ -126,6 +149,28 @@ export default function PerfilScreen({ navigation }: any) {
               <Text style={s.statLabel}>Habilidades</Text>
             </View>
           </View>
+        </View>
+
+        {/* Disponibilidade */}
+        <View style={s.availabilityCard}>
+          <View style={s.availabilityLeft}>
+            <MaterialCommunityIcons
+              name={disponivel ? 'briefcase-check' : 'briefcase-off-outline'}
+              size={22}
+              color={disponivel ? colors.success : colors.textMuted}
+            />
+            <View style={{ marginLeft: spacing.md }}>
+              <Text style={s.availabilityTitle}>Disponivel para contratacao</Text>
+              <Text style={s.availabilitySubtitle}>
+                {disponivel ? 'Visivel para empresas' : 'Nao visivel para empresas'}
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={disponivel}
+            onValueChange={handleToggleDisponivel}
+            color={colors.success}
+          />
         </View>
 
         {/* Qualifications Summary */}
@@ -419,5 +464,33 @@ const s = StyleSheet.create({
     fontSize: 12,
     color: colors.textMuted,
     marginTop: spacing.xl,
+  },
+
+  availabilityCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    marginHorizontal: spacing.md,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginTop: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  availabilityLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  availabilityTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  availabilitySubtitle: {
+    fontSize: 12,
+    color: colors.textMuted,
+    marginTop: 2,
   },
 });

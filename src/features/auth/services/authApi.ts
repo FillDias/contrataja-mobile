@@ -47,4 +47,9 @@ export const authApi = {
     const response = await apiClient.get('/users/me');
     return response.data;
   },
+
+  async setDisponivel(disponivel: boolean) {
+    const response = await apiClient.patch('/users/me/disponivel', { disponivel });
+    return response.data;
+  },
 };

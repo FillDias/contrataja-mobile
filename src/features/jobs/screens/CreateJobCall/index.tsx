@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { Text, Button, Chip, Switch } from 'react-native-paper';
+import { AREAS_ATUACAO } from '../../types/areas';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -134,6 +135,7 @@ export default function CreateJobCall({ navigation }: any) {
   const jobWorkMode = watch('jobWorkMode');
   const experienceLevel = watch('experienceLevel');
   const driverLicense = watch('driverLicense');
+  const category = watch('category');
 
   return (
     <ScrollView contentContainerStyle={styles.scroll}>
@@ -142,7 +144,12 @@ export default function CreateJobCall({ navigation }: any) {
       {/* INFORMAÇÕES BÁSICAS */}
       <SectionCard title="Informações básicas">
         <FormInput name="title" control={control} label="Título da vaga" placeholder="Ex: Desenvolvedor Backend Sênior" />
-        <FormInput name="category" control={control} label="Área / Categoria" placeholder="Ex: Tecnologia, Saúde, Construção..." />
+        <ChipSelector
+          label="Area de Atuacao"
+          options={AREAS_ATUACAO.map((a) => ({ label: a, value: a }))}
+          value={category}
+          onChange={(v) => setValue('category', v)}
+        />
         <FormInput
           name="description"
           control={control}

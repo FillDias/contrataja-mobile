@@ -13,6 +13,7 @@ import PerfilScreen from '../features/profile/screens/PerfilScreen';
 import JobCallDetail from '../features/jobs/screens/JobCallDetail';
 import ResumeScreen from '../features/resume/screens/ResumeScreen';
 import Chat from '../features/chat/screens/Chat';
+import ProfilePFScreen from '../features/profile/screens/ProfilePF';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const stackScreenOptions = {
@@ -41,6 +42,7 @@ export default function PFStack() {
       <Stack.Screen name="PFTabs" component={PFTabs} options={{ headerShown: false }} />
       <Stack.Screen name="JobCallDetail" component={JobCallDetail} options={{ title: 'Detalhes da vaga' }} />
       <Stack.Screen name="Resume" component={ResumeScreen} options={{ title: 'Meu Curriculo' }} />
+      <Stack.Screen name="ProfilePF" component={ProfilePFScreen} options={{ title: 'Editar Perfil' }} />
       <Stack.Screen name="Chat" component={Chat} options={({ route }: any) => ({ title: route.params?.otherUserName ?? 'Chat' })} />
     </Stack.Navigator>
   );
