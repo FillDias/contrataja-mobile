@@ -290,7 +290,7 @@ export default function RegisterScreen({ route, navigation }: any) {
               Li e aceito os{' '}
               <Text
                 style={s.link}
-                onPress={() => Linking.openURL('https://contrataja.com.br/termos')}
+                onPress={() => navigation.navigate('TermosUso')}
               >
                 Termos de Uso
               </Text>
@@ -309,9 +309,7 @@ export default function RegisterScreen({ route, navigation }: any) {
               Li e aceito a{' '}
               <Text
                 style={s.link}
-                onPress={() =>
-                  Linking.openURL('https://contrataja.com.br/privacidade')
-                }
+                onPress={() => navigation.navigate('Privacidade')}
               >
                 Política de Privacidade
               </Text>

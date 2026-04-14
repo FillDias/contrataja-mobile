@@ -75,6 +75,13 @@ export default function LoginScreen({ navigation, route }: any) {
 
         <TouchableOpacity
           style={styles.linkButton}
+          onPress={() => navigation.navigate('EsqueceuSenha')}
+        >
+          <Text style={styles.linkText}>Esqueceu sua senha? <Text style={styles.linkBold}>Recuperar</Text></Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.linkButton}
           onPress={() => navigation.navigate('Register', { userType })}
         >
           <Text style={styles.linkText}>Nao tem conta? <Text style={styles.linkBold}>Criar conta</Text></Text>

@@ -54,7 +54,7 @@ const MOCK_EDUCATIONS = [
 ];
 
 export default function PerfilScreen({ navigation }: any) {
-  const { logout } = useAuthStore();
+  const { logout, deleteAccount } = useAuthStore();
   const { profile, fetchProfile } = useUserStore();
 
   useEffect(() => {
@@ -108,6 +108,30 @@ export default function PerfilScreen({ navigation }: any) {
       { text: 'Cancelar' },
       { text: 'Sair', onPress: logout, style: 'destructive' },
     ]);
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      'Excluir conta',
+      'Tem certeza? Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Excluir minha conta',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert(
+              'Confirmar exclusão',
+              'Esta é sua última confirmação. Seus dados serão apagados agora.',
+              [
+                { text: 'Cancelar', style: 'cancel' },
+                { text: 'Sim, excluir', style: 'destructive', onPress: deleteAccount },
+              ],
+            );
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -275,15 +299,33 @@ export default function PerfilScreen({ navigation }: any) {
             <MaterialCommunityIcons name="chevron-right" size={22} color={colors.textMuted} />
           </TouchableOpacity>
 
+          <TouchableOpacity style={s.menuItem} onPress={() => navigation.navigate('TermosUso')}>
+            <MaterialCommunityIcons name="file-document-outline" size={22} color={colors.text} />
+            <Text style={s.menuText}>Termos de Uso</Text>
+            <MaterialCommunityIcons name="chevron-right" size={22} color={colors.textMuted} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={s.menuItem} onPress={() => navigation.navigate('Privacidade')}>
+            <MaterialCommunityIcons name="shield-account-outline" size={22} color={colors.text} />
+            <Text style={s.menuText}>Política de Privacidade</Text>
+            <MaterialCommunityIcons name="chevron-right" size={22} color={colors.textMuted} />
+          </TouchableOpacity>
+
           <TouchableOpacity style={s.menuItem}>
             <MaterialCommunityIcons name="help-circle-outline" size={22} color={colors.text} />
             <Text style={s.menuText}>Ajuda e Suporte</Text>
             <MaterialCommunityIcons name="chevron-right" size={22} color={colors.textMuted} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={[s.menuItem, s.menuItemLast]} onPress={handleLogout}>
+          <TouchableOpacity style={s.menuItem} onPress={handleLogout}>
             <MaterialCommunityIcons name="logout" size={22} color={colors.error} />
             <Text style={[s.menuText, { color: colors.error }]}>Sair da Conta</Text>
+            <MaterialCommunityIcons name="chevron-right" size={22} color={colors.error} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[s.menuItem, s.menuItemLast]} onPress={handleDeleteAccount}>
+            <MaterialCommunityIcons name="delete-outline" size={22} color={colors.error} />
+            <Text style={[s.menuText, { color: colors.error }]}>Excluir Conta</Text>
             <MaterialCommunityIcons name="chevron-right" size={22} color={colors.error} />
           </TouchableOpacity>
         </View>

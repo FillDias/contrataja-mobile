@@ -16,6 +16,7 @@ interface AuthState {
   logout: () => Promise<void>;
   loadStoredAuth: () => Promise<void>;
   clearError: () => void;
+  deleteAccount: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -95,4 +96,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
+
+  deleteAccount: async () => {
+    await authApi.deleteAccount();
+    await storageService.clear();
+    socketService.disconnectAll();
+    set({ token: null, user: null, isAuthenticated: false });
+  },
 }));
