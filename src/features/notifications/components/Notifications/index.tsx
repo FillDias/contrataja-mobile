@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, FlatList, RefreshControl } from 'react-native';
+import { View, FlatList, RefreshControl, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, Card, Button } from 'react-native-paper';
 import Loading from '../../../../components/common/Loading';
 import useNotifications from './useNotifications';
 import styles from './styles';
 
 export default function Notifications() {
+  const insets = useSafeAreaInsets();
   const {
     notifications,
     isLoading,
@@ -26,14 +28,20 @@ export default function Notifications() {
 
   return (
     <View style={styles.container}>
-      {unreadCount > 0 && (
-        <View style={styles.headerRow}>
-          <Text variant="bodySmall">{unreadCount} nao lida(s)</Text>
-          <Button compact onPress={handleMarkAllAsRead}>
-            Marcar todas como lidas
-          </Button>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.headerTitle}>Notificações</Text>
+            <Text style={styles.headerSubtitle}>Suas atividades recentes</Text>
+          </View>
+          {unreadCount > 0 && (
+            <Button compact onPress={handleMarkAllAsRead}>
+              Marcar todas como lidas
+            </Button>
+          )}
         </View>
-      )}
+      </View>
 
       <FlatList
         data={notifications}

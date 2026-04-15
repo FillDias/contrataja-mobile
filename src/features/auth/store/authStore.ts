@@ -3,6 +3,7 @@ import { User, UserType, RegisterData, LoginData } from '../../../types';
 import { authApi } from '../services/authApi';
 import { storageService } from '../../../services/storage/storageService';
 import { socketService } from '../../../services/socket/socketService';
+import { registerPushToken } from '../../../services/notifications/pushService';
 
 interface AuthState {
   token: string | null;
@@ -16,6 +17,7 @@ interface AuthState {
   logout: () => Promise<void>;
   loadStoredAuth: () => Promise<void>;
   clearError: () => void;
+  deleteAccount: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -37,6 +39,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isAuthenticated: true,
         isLoading: false,
       });
+      registerPushToken().catch(() => {});
     } catch (error: any) {
       set({
         isLoading: false,
@@ -86,6 +89,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           user,
           isAuthenticated: true,
         });
+        registerPushToken().catch(() => {});
       }
     } catch (error) {
       console.log('Erro ao carregar auth:', error);
@@ -95,4 +99,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
+
+  deleteAccount: async () => {
+    await authApi.deleteAccount();
+    await storageService.clear();
+    socketService.disconnectAll();
+    set({ token: null, user: null, isAuthenticated: false });
+  },
 }));

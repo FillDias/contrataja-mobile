@@ -10,7 +10,10 @@ import CreateJobCall from '../features/jobs/screens/CreateJobCall';
 import TalentProfile from '../features/profile/screens/TalentProfile';
 import JobCallDetail from '../features/jobs/screens/JobCallDetail';
 import Notifications from '../features/notifications/components/Notifications';
+import PerfilCompany from '../features/profile/screens/PerfilCompany';
 import Chat from '../features/chat/screens/Chat';
+import TermosUsoScreen from '../features/legal/screens/TermosUsoScreen';
+import PrivacidadeScreen from '../features/legal/screens/PrivacidadeScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const stackScreenOptions = {
@@ -27,6 +30,7 @@ function CompanyTabs() {
       <Tab.Screen name="FindTalent" component={FindTalent} options={{ tabBarLabel: 'Encontrar Talento', tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="account-search-outline" size={size} color={color} /> }} />
       <Tab.Screen name="HomeCompany" component={HomeCompany} options={{ tabBarLabel: 'Publicar Vaga', tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="briefcase-plus-outline" size={size} color={color} /> }} />
       <Tab.Screen name="NotificationsCompany" component={Notifications} options={{ tabBarLabel: 'Notificacoes', tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="bell-outline" size={size} color={color} /> }} />
+      <Tab.Screen name="ProfileCompany" component={PerfilCompany} options={{ tabBarLabel: 'Perfil', tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="domain" size={size} color={color} /> }} />
     </Tab.Navigator>
   );
 }
@@ -38,6 +42,8 @@ export default function CompanyStack() {
       <Stack.Screen name="TalentProfile" component={TalentProfile} options={{ title: 'Perfil do profissional' }} />
       <Stack.Screen name="JobCallStatus" component={JobCallDetail} options={{ title: 'Status da vaga' }} />
       <Stack.Screen name="Chat" component={Chat} options={({ route }: any) => ({ title: route.params?.otherUserName ?? 'Chat' })} />
+      <Stack.Screen name="TermosUso" component={TermosUsoScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Privacidade" component={PrivacidadeScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

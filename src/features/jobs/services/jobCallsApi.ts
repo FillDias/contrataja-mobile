@@ -41,4 +41,13 @@ export const jobCallsApi = {
     const response = await apiClient.post(`/job-calls/${jobCallId}/apply`);
     return response.data;
   },
+
+  async updateJobCallStatus(jobCallId: string, status: string): Promise<JobCall> {
+    const response = await apiClient.patch(`/job-calls/${jobCallId}/status`, { status });
+    return response.data;
+  },
+
+  async deleteJobCall(jobCallId: string): Promise<void> {
+    await apiClient.delete(`/job-calls/${jobCallId}`);
+  },
 };

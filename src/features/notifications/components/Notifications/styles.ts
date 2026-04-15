@@ -6,12 +6,26 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  headerRow: {
+  header: {
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.md,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  headerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: spacing.lg,
-    paddingBottom: spacing.sm,
+    alignItems: 'flex-start',
+  },
+  headerTitle: {
+    ...typography.h2,
+    color: colors.text,
+  },
+  headerSubtitle: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
   },
   list: {
     padding: spacing.md,

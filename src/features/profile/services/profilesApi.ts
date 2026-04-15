@@ -1,11 +1,16 @@
 import apiClient from '../../../services/api/apiClient';
 
 export const profilesApi = {
-  // Busca de profissionais
+  async getAvailableTalents() {
+    const response = await apiClient.get('/profiles/pf/talents');
+    return response.data;
+  },
+
   async searchProfessionals(params: {
     query?: string;
     workMode?: string;
     minExperience?: string;
+    areaAtuacao?: string;
   }) {
     const response = await apiClient.get('/profiles/pf/search', { params });
     return response.data;
@@ -13,6 +18,11 @@ export const profilesApi = {
 
   async getProfilePFById(id: string) {
     const response = await apiClient.get(`/profiles/pf/${id}`);
+    return response.data;
+  },
+
+  async getTalentByUserId(userId: string) {
+    const response = await apiClient.get(`/profiles/pf/talent/${userId}`);
     return response.data;
   },
 
@@ -43,6 +53,10 @@ export const profilesApi = {
   },
 
   // Company
+  async getMyProfileCompany() {
+    const response = await apiClient.get('/profiles/company/me');
+    return response.data;
+  },
   async createProfileCompany(data: any) {
     const response = await apiClient.post('/profiles/company', data);
     return response.data;

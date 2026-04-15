@@ -7,11 +7,16 @@ export default StyleSheet.create({
     backgroundColor: colors.background,
   },
   header: {
-    padding: spacing.xl,
-    paddingTop: spacing.lg,
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.md,
     backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
   headerTitle: {
     ...typography.h2,

@@ -47,4 +47,23 @@ export const authApi = {
     const response = await apiClient.get('/users/me');
     return response.data;
   },
+
+  async setDisponivel(disponivel: boolean) {
+    const response = await apiClient.patch('/users/me/disponivel', { disponivel });
+    return response.data;
+  },
+
+  async requestPasswordReset(email: string): Promise<{ message: string }> {
+    const response = await apiClient.post('/auth/request-reset', { email });
+    return response.data;
+  },
+
+  async resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
+    const response = await apiClient.post('/auth/reset-password', { token, newPassword });
+    return response.data;
+  },
+
+  async deleteAccount(): Promise<void> {
+    await apiClient.delete('/users/me');
+  },
 };
