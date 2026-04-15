@@ -3,6 +3,7 @@ import { User, UserType, RegisterData, LoginData } from '../../../types';
 import { authApi } from '../services/authApi';
 import { storageService } from '../../../services/storage/storageService';
 import { socketService } from '../../../services/socket/socketService';
+import { registerPushToken } from '../../../services/notifications/pushService';
 
 interface AuthState {
   token: string | null;
@@ -38,6 +39,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isAuthenticated: true,
         isLoading: false,
       });
+      registerPushToken().catch(() => {});
     } catch (error: any) {
       set({
         isLoading: false,
@@ -87,6 +89,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           user,
           isAuthenticated: true,
         });
+        registerPushToken().catch(() => {});
       }
     } catch (error) {
       console.log('Erro ao carregar auth:', error);

@@ -122,7 +122,7 @@ export default function RedefinirSenhaScreen({ navigation, route }: any) {
         )}
 
         <TouchableOpacity
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => done ? navigation.navigate('UserType') : navigation.goBack()}
           style={s.backLink}
         >
           <Text style={s.backLinkText}>

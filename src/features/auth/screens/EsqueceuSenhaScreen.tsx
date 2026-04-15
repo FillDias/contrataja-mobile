@@ -52,12 +52,23 @@ export default function EsqueceuSenhaScreen({ navigation }: any) {
         </Text>
 
         {sent ? (
-          <View style={s.successBox}>
-            <MaterialCommunityIcons name="check-circle-outline" size={24} color={colors.success} />
-            <Text style={s.successText}>
-              Se o e-mail estiver cadastrado, você receberá as instruções em breve. Verifique também sua caixa de spam.
-            </Text>
-          </View>
+          <>
+            <View style={s.successBox}>
+              <MaterialCommunityIcons name="check-circle-outline" size={24} color={colors.success} />
+              <Text style={s.successText}>
+                Se o e-mail estiver cadastrado, você receberá as instruções em breve. Verifique também sua caixa de spam.
+              </Text>
+            </View>
+            <Button
+              mode="contained"
+              onPress={() => navigation.navigate('RedefinirSenha')}
+              style={s.button}
+              contentStyle={{ height: 50 }}
+              buttonColor={colors.accent}
+            >
+              Inserir código recebido
+            </Button>
+          </>
         ) : (
           <>
             <TextInput
@@ -88,7 +99,7 @@ export default function EsqueceuSenhaScreen({ navigation }: any) {
           </>
         )}
 
-        <TouchableOpacity onPress={() => navigation.navigate('Login')} style={s.backLink}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backLink}>
           <Text style={s.backLinkText}>Voltar para o login</Text>
         </TouchableOpacity>
       </View>
