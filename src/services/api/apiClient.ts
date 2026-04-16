@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { storageService } from '../storage/storageService';
 
-const API_URL = 'http://192.168.1.6:3000';
+const API_URL = 'https://contrataja-backend.onrender.com';
 
 const apiClient = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+  timeout: 60000,
   headers: { 'Content-Type': 'application/json' },
 });
 
